@@ -537,6 +537,53 @@
       "more": [
         "Business entities: list, create, get, update, config and region config; tags: list, upsert; tax: categories, jurisdiction rates, resolve rate; jobs"
       ]
+    },
+    "accounting": {
+      "title": "Accounting",
+      "note": "Journal entries live under the /accounting_new path. Debit and credit amounts are integers; the docs do not state the unit, so confirm before posting real values.",
+      "groups": [
+        {
+          "title": "Journal entries",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/accounting_new/journal_entry",
+              "description": "Create a journal entry. Required: description, currency, journal_lines. Optional: posted_at, event, status_type (pending, forecasted, estimated or posted), custom_data. If posted_at is in a closed period: auto_adjust_closed_period true moves it to the next open period, false raises PeriodClosedException. A line either gives account_id, or account_category plus name.",
+              "body": {
+                "description": "Monthly subscription revenue",
+                "currency": "USD",
+                "posted_at": "2026-03-31T00:00:00Z",
+                "status_type": "posted",
+                "auto_adjust_closed_period": true,
+                "journal_lines": [
+                  {
+                    "account_id": "<account_uuid>",
+                    "debits": 10000,
+                    "credits": 0,
+                    "currency": "USD"
+                  },
+                  {
+                    "account_category": "Income",
+                    "name": "Subscription Revenue",
+                    "debits": 0,
+                    "credits": 10000,
+                    "currency": "USD",
+                    "tags": [
+                      {
+                        "reference_tag_type": "customer",
+                        "reference_tag_content": "Acme Corp"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Chart of accounts: get, get and create account; journal entries: get entries and lines, update entry; balance sheet, income statement, balance by tag; close dates, validate and close period, accounting periods, last closed period"
+      ]
     }
   }
 }

@@ -18,7 +18,7 @@ for (const f of fs.readdirSync(dir).filter(x => x.endsWith('.json')).sort()) {
   need(Array.isArray(m.qa) && m.qa.length >= 20, f, 'qa needs at least 20 questions (has ' + (m.qa || []).length + ')');
   (m.qa || []).forEach((q, i) => need(['Difference', 'Use case', 'Edge case', 'How it works'].includes(q.type) && q.question && q.answer, f, 'qa #' + (i + 1) + ' needs a valid type, question and answer'));
   need(m.api && Array.isArray(m.api.groups), f, 'api.groups missing');
-  if (m.widget) need(['pricing-calculator', 'invoice-date-calculator'].includes(m.widget), f, 'unknown widget ' + m.widget);
+  if (m.widget) need(['pricing-calculator', 'invoice-date-calculator', 'journal-walkthrough'].includes(m.widget), f, 'unknown widget ' + m.widget);
 }
 const ep = JSON.parse(fs.readFileSync(path.join(root, 'content/endpoints.json'), 'utf8'));
 for (const [k, s] of Object.entries(ep.sets)) for (const g of s.groups) for (const e of g.endpoints) need(['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(e.method) && e.path.startsWith('/'), 'endpoints.' + k, 'bad endpoint ' + e.method + ' ' + e.path);

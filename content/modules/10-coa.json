@@ -1,0 +1,291 @@
+{
+  "key": "coa",
+  "name": "Chart of accounts",
+  "group": "Accounting",
+  "description": "The five account categories, Zenskar's default accounts, custom Income accounts and their limits.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Five categories: assets, liabilities, equity, income, expenses",
+    "Only custom Income accounts are fully functional today",
+    "Accounts cannot be renamed or deleted",
+    "A revenue rule only needs an Income account; Zenskar picks the debit side"
+  ],
+  "learn": {
+    "intro": "The chart of accounts is the list of ledger accounts Zenskar posts to. It keeps reporting consistent and ties into accounting workflows. When no custom accounts exist, the default structure handles standard workflows automatically.",
+    "subs": [
+      {
+        "title": "The structure",
+        "cards": [
+          {
+            "title": "Five categories",
+            "body": "Assets, Liabilities, Equity, Income and Expenses. Custom accounts can be created in each, but only Income is fully functional for revenue recognition.",
+            "example": "The revenue you finally recognise lands in an Income account."
+          },
+          {
+            "title": "Default assets",
+            "body": "Accounts Receivable (with Customers and Payment Gateways sub-accounts), Cash, TDS Receivable, Unbilled Revenue.",
+            "example": "Approving an invoice debits Accounts Receivable."
+          },
+          {
+            "title": "Default liabilities",
+            "body": "Accounts Payable, Contra Accounts Receivable (with Customers and Payment Gateways sub-accounts), Customer Wallet, Deferred Revenue, Sales Tax.",
+            "example": "A prepaid invoice credits Deferred Revenue."
+          },
+          {
+            "title": "Default equity and income",
+            "body": "Equity: Retained Earnings. Income: Sales and Services Revenue.",
+            "example": "Recognised subscription revenue goes to Sales and Services Revenue unless a rule points elsewhere."
+          },
+          {
+            "title": "Default expenses",
+            "body": "GST, Payment Gateway Fees, Sales Returns and Allowances, Tax Withheld.",
+            "example": "Fees charged by a payment gateway have their own default expense account."
+          }
+        ]
+      },
+      {
+        "title": "Custom accounts",
+        "cards": [
+          {
+            "title": "Creating an account",
+            "body": "Click Accounting in the side panel, open the Chart of Accounts link at the bottom, click + ACCOUNT, then define the name and properties. After saving it is available system-wide, including in revenue rules.",
+            "example": "Add a Partnership revenue account."
+          },
+          {
+            "title": "Only Income is functional",
+            "body": "Assets, liabilities, equity and expense accounts can be created, but automated routing to them is not yet available. It covers Zenskar-defined accounts only in those categories.",
+            "example": "A custom expense account will exist but nothing posts to it automatically."
+          },
+          {
+            "title": "Revenue account on a rule",
+            "body": "Pick any Income account, custom or default, in a revenue rule. All POBs from the rule inherit it. You only choose the Income account; Zenskar works out the debit side: Accounts Receivable for invoices, Cash for payments, Deferred Revenue for recognised deferred revenue.",
+            "example": "Send implementation fees to a Partnership account and subscriptions to Sales and Services Revenue."
+          },
+          {
+            "title": "No rename or delete",
+            "body": "Accounts cannot be renamed or deleted after creation, to maintain audit trail integrity and consistent reporting.",
+            "example": "A typo in an account name stays; name carefully."
+          }
+        ]
+      },
+      {
+        "title": "Why customers care",
+        "cards": [
+          {
+            "title": "Different accounts for different products",
+            "body": "Customers often want one-time products in one revenue account and subscription or usage products in another, or partner-sold products in a separate account from direct sales.",
+            "example": "One-time setup fees and recurring subscription fees post to different Income accounts."
+          },
+          {
+            "title": "Revenue-related subset only",
+            "body": "The ERP holds the full general ledger. Zenskar's chart covers the accounts related to revenue and creates as many of them automatically as its data allows.",
+            "example": "Opening balances for older items are imported rather than derived."
+          },
+          {
+            "title": "Planned additions",
+            "body": "Custom rules functionality is in development, with multi-level account hierarchies and industry-specific templates planned.",
+            "example": "Do not promise hierarchies to a client yet."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>No rename or delete.</b> Modifying or deleting accounts is blocked in every category.",
+    "<b>Not functional yet.</b> Custom assets, liabilities, equity and expenses can be created, but nothing routes to them automatically.",
+    "<b>Income only on rules.</b> A revenue rule needs only the Income account; the debit side is determined automatically.",
+    "<b>Default structure.</b> With no custom accounts, defaults handle standard flows, so you do not need to create accounts to start.",
+    "<b>Hierarchies.</b> Multi-level hierarchies and industry templates are planned, not available.",
+    "<b>Docs version.</b> The 2024 docs describe this; check the product version your tenant runs.",
+    "<b>Tax accounts.</b> The docs list Sales Tax under default liabilities and GST under default expenses; confirm with an SME which applies to which tax setup."
+  ],
+  "api": {
+    "note": "Paths for these operations were not confirmed in the docs I read; check the API reference before use.",
+    "endpointSet": "accounting",
+    "groups": [
+      {
+        "title": "Accounting",
+        "items": [
+          "Get chart of accounts",
+          "Get account",
+          "Create account"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which account category is fully functional for custom accounts today?",
+      "options": [
+        "Assets",
+        "Liabilities",
+        "Income",
+        "Expenses"
+      ],
+      "answer": 2,
+      "explanation": "Custom Income accounts work for revenue recognition. Other categories can be created but are not yet functional."
+    },
+    {
+      "question": "Can you rename an account after creating it?",
+      "options": [
+        "Yes, any time",
+        "Yes, within 24 hours",
+        "No, accounts cannot be renamed or deleted",
+        "Only in sandbox"
+      ],
+      "answer": 2,
+      "explanation": "Accounts are locked after creation to protect the audit trail."
+    },
+    {
+      "question": "You pick an Income account on a revenue rule. Who determines the debit side?",
+      "options": [
+        "You, manually",
+        "Zenskar, automatically",
+        "Your ERP",
+        "The customer"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar uses Accounts Receivable for invoices, Cash for payments and Deferred Revenue for recognised deferred revenue."
+    },
+    {
+      "question": "Where do you create a custom account?",
+      "options": [
+        "Settings, Tax",
+        "Accounting, then Chart of Accounts, then + ACCOUNT",
+        "Customers, Accounts",
+        "The ERP only"
+      ],
+      "answer": 1,
+      "explanation": "Open Accounting, use the Chart of Accounts link at the bottom, then click + ACCOUNT."
+    },
+    {
+      "question": "Which is a default Zenskar liability?",
+      "options": [
+        "Cash",
+        "Deferred Revenue",
+        "Retained Earnings",
+        "Sales and Services Revenue"
+      ],
+      "answer": 1,
+      "explanation": "Deferred Revenue is a default liability; Cash is an asset, Retained Earnings is equity and Sales and Services Revenue is income."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Account category vs account?",
+      "answer": "A category is one of five groups (assets, liabilities, equity, income, expenses). An account is a specific ledger line inside it, like Cash or Deferred Revenue."
+    },
+    {
+      "type": "Difference",
+      "question": "Income account vs Deferred Revenue account?",
+      "answer": "Income holds recognised revenue. Deferred Revenue is a liability holding invoiced revenue not yet earned; it converts into Income as service is delivered."
+    },
+    {
+      "type": "Difference",
+      "question": "Default accounts vs custom accounts?",
+      "answer": "Defaults ship with Zenskar and handle standard workflows. Custom accounts are ones you add; only Income is fully functional."
+    },
+    {
+      "type": "Difference",
+      "question": "Revenue account vs debit side on a rule?",
+      "answer": "You choose the revenue (Income) account. Zenskar decides the debit side automatically from the event."
+    },
+    {
+      "type": "Difference",
+      "question": "Chart of accounts vs revenue rule library?",
+      "answer": "The chart is the list of accounts. The rule library defines how products are recognised and which Income account they post to."
+    },
+    {
+      "type": "Difference",
+      "question": "Zenskar's chart vs the ERP's general ledger?",
+      "answer": "The ERP holds the full ledger. Zenskar manages the revenue-related subset and syncs entries to the ERP."
+    },
+    {
+      "type": "Difference",
+      "question": "Sales Tax vs GST default accounts?",
+      "answer": "The docs list Sales Tax among default liabilities and GST among default expenses. Confirm with an SME which one a given tax setup uses."
+    },
+    {
+      "type": "Difference",
+      "question": "Accounts Receivable vs Contra Accounts Receivable?",
+      "answer": "Both are default accounts with Customers and Payment Gateways sub-accounts. AR is listed as an asset and Contra AR among liabilities, where it acts as an offset. Confirm usage with an SME."
+    },
+    {
+      "type": "Use case",
+      "question": "Post one-time fees and subscriptions to different accounts?",
+      "answer": "Create a custom Income account for the one-time products and point their revenue rules at it."
+    },
+    {
+      "type": "Use case",
+      "question": "Partner-sold vs direct products?",
+      "answer": "Create a Partnership Income account and send partner-sold products to it through a revenue rule."
+    },
+    {
+      "type": "Use case",
+      "question": "Outsourced implementation bundled with the platform?",
+      "answer": "Direct the implementation product to the partnership account and the subscription to your own revenue account."
+    },
+    {
+      "type": "Use case",
+      "question": "Add a commission account?",
+      "answer": "Add it as an Income account and it appears in the rule's revenue account dropdown."
+    },
+    {
+      "type": "Use case",
+      "question": "Add a custom expense account for reporting?",
+      "answer": "You can create it, but nothing routes to it automatically yet."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete an account I created by mistake?",
+      "answer": "No. Accounts cannot be renamed or deleted in any category."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can a custom asset or liability account receive postings?",
+      "answer": "Not automatically. Automated routing covers Zenskar-defined accounts only in those categories."
+    },
+    {
+      "type": "Edge case",
+      "question": "Are multi-level hierarchies available?",
+      "answer": "No. They are planned along with industry templates."
+    },
+    {
+      "type": "Edge case",
+      "question": "What debit side does a revenue rule use?",
+      "answer": "Accounts Receivable for invoices, Cash for payments and Deferred Revenue for recognised deferred revenue."
+    },
+    {
+      "type": "Edge case",
+      "question": "The account I need is not in the dropdown.",
+      "answer": "Create it first. Once saved it is available system-wide, including in revenue rules."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I change an account's category later?",
+      "answer": "No. Modifications to accounts are blocked."
+    },
+    {
+      "type": "How it works",
+      "question": "Where do I create an account?",
+      "answer": "Accounting in the side panel, the Chart of Accounts link at the bottom, then + ACCOUNT."
+    },
+    {
+      "type": "How it works",
+      "question": "What happens with no custom accounts?",
+      "answer": "The default structure handles standard workflows automatically."
+    },
+    {
+      "type": "How it works",
+      "question": "What is TDS Receivable?",
+      "answer": "A default asset account. TDS stands for tax deducted at source; the docs list the account without further detail."
+    }
+  ]
+}

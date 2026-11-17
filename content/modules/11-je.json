@@ -1,0 +1,306 @@
+{
+  "key": "je",
+  "name": "Journal entries",
+  "group": "Accounting",
+  "description": "Which entries each event creates, the month-end revenue recognition job, and posting to the ERP.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Invoice approval raises AR; payment clears it; recognition moves deferred or unbilled to revenue",
+    "AR entries are not revenue entries",
+    "Run the revenue recognition job at month end, review drafts, then transfer",
+    "Transferring locks the period and syncs entries to the ERP"
+  ],
+  "learn": {
+    "intro": "A journal entry is a dated record of debit and credit lines. Zenskar creates entries from events (invoice approval, payment, revenue recognition) and syncs them to your ERP. The walkthrough on the Try it tab steps through two scenarios.",
+    "subs": [
+      {
+        "title": "Entries by event",
+        "cards": [
+          {
+            "title": "Invoice approved",
+            "body": "Accounts Receivable goes up. The other side depends on timing: Deferred Revenue for a future period (prepaid), or Unbilled Revenue is cleared when you invoice service already delivered.",
+            "example": "Approve a $1,200 annual invoice: Dr Accounts Receivable $1,200, Cr Deferred Revenue $1,200."
+          },
+          {
+            "title": "Payment received",
+            "body": "Cash goes up and receivables go down. Deferred revenue does not change at payment.",
+            "example": "Customer pays $1,200: Dr Cash $1,200, Cr Accounts Receivable $1,200."
+          },
+          {
+            "title": "Revenue recognised (prepaid)",
+            "body": "A schedule-based entry that fires on a calendar, not on a customer action. It moves value out of Deferred Revenue into revenue.",
+            "example": "Jan 31: Dr Deferred Revenue $100, Cr Revenue $100."
+          },
+          {
+            "title": "Revenue recognised (delivered, not invoiced)",
+            "body": "Service delivered before the invoice moves into Unbilled Revenue (an asset) as revenue is earned. At invoicing it converts to Accounts Receivable.",
+            "example": "Jan usage $300: Dr Unbilled Revenue $300, Cr Revenue $300. Feb 1 invoice: Dr Accounts Receivable $300, Cr Unbilled Revenue $300."
+          },
+          {
+            "title": "Credit note or refund",
+            "body": "A general accounting pattern: debit revenue (or a contra revenue account), credit accounts receivable or cash. Confirm Zenskar's exact lines for your setup.",
+            "example": "$1,200 recognised upfront, churn at 6 months: Dr Revenue $600, Cr Accounts Receivable or Cash $600."
+          }
+        ]
+      },
+      {
+        "title": "The month-end flow",
+        "cards": [
+          {
+            "title": "Revenue recognition job",
+            "body": "Run at month end. It goes through all contracts, extracts the revenue entries for the period and creates draft journal entries, from Deferred to Revenue or from Unbilled to Revenue.",
+            "example": "Run it for Sep 30 to close September."
+          },
+          {
+            "title": "Review and edit drafts",
+            "body": "Before anything is final you can edit individual journal lines and add tags.",
+            "example": "Add a tag to a line, or correct one amount."
+          },
+          {
+            "title": "Transfer",
+            "body": "Clicking transfer locks that period and syncs the entries into your ERP.",
+            "example": "After transfer, September is locked."
+          },
+          {
+            "title": "Posting through the API",
+            "body": "Entries can also be created by API. Each has a description, currency and journal lines, and an optional status of pending, forecasted, estimated or posted.",
+            "example": "POST /accounting_new/journal_entry, see the API tab."
+          }
+        ]
+      },
+      {
+        "title": "Demo and ERP guidance (internal)",
+        "cards": [
+          {
+            "title": "Why AR entries confuse customers",
+            "body": "The Journal entries page also lists the AR entry created at invoice approval. AR is not revenue, and customers have flagged this as confusing.",
+            "example": "Customers see an entry that is not a revenue movement and ask why."
+          },
+          {
+            "title": "Why invoices and journals cannot both export",
+            "body": "Zenskar's journal entries already account for accounts receivable. Exporting an invoice also creates an AR entry in the ERP, so exporting both would double-count AR.",
+            "example": "Choose invoices or revenue journals for the ERP, not both."
+          },
+          {
+            "title": "What to show in a demo",
+            "body": "Do not open the Journal entries page. Show revenue recognition jobs, where you see only deferred-to-revenue or unbilled-to-revenue movements.",
+            "example": "Walk the draft entries, edit a line, then transfer."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Source note:</b> the event entries and the demo guidance come from an internal training call and the Accounting Fundamentals deck; the credit-note pattern is general accounting. Confirm against your tenant."
+  },
+  "edgeCases": [
+    "<b>Closed period.</b> Through the API, if posted_at falls in a closed period and auto_adjust_closed_period is false, the request raises PeriodClosedException. If it is true, posted_at moves to the next open period.",
+    "<b>Double-counted AR.</b> Exporting both invoices and journal entries to an ERP creates two AR entries.",
+    "<b>After transfer.</b> The period is locked; later corrections land in a later period.",
+    "<b>Amount units.</b> The API page does not say the unit for debits and credits; confirm before posting real values.",
+    "<b>Balanced lines.</b> The API page does not say whether it validates that lines balance. Double-entry accounting says they must.",
+    "<b>AR is not a revenue entry.</b> Only deferred-to-revenue and unbilled-to-revenue entries are revenue movements.",
+    "<b>ERP limits.</b> Per Zenskar's journal entries article: NetSuite can bottleneck on large batches, QuickBooks Online CSV import handles up to about 1,000 rows at a time, and Xero allows two active tracking categories."
+  ],
+  "api": {
+    "note": "Journal entry statuses are pending, forecasted, estimated and posted.",
+    "endpointSet": "accounting",
+    "groups": [
+      {
+        "title": "Journal entries",
+        "items": [
+          "Create journal entry (POST /accounting_new/journal_entry)",
+          "Get journal entries and journal lines",
+          "Update journal entry"
+        ]
+      },
+      {
+        "title": "Period close",
+        "items": [
+          "Get, create and update close date",
+          "Validate period close",
+          "Close accounting period",
+          "Get accounting periods",
+          "Get last closed period"
+        ]
+      }
+    ]
+  },
+  "widget": "journal-walkthrough",
+  "quiz": [
+    {
+      "question": "A $1,200 annual prepaid invoice is approved on Jan 1. Which entry is right?",
+      "options": [
+        "Dr Cash, Cr Revenue",
+        "Dr Accounts Receivable, Cr Deferred Revenue",
+        "Dr Deferred Revenue, Cr Accounts Receivable",
+        "Dr Revenue, Cr Cash"
+      ],
+      "answer": 1,
+      "explanation": "AR goes up and the undelivered value is a liability, deferred revenue."
+    },
+    {
+      "question": "What does a customer payment do to deferred revenue?",
+      "options": [
+        "Reduces it",
+        "Increases it",
+        "Nothing",
+        "Converts it to unbilled"
+      ],
+      "answer": 2,
+      "explanation": "Payment clears AR and raises cash. Deferred revenue only falls when revenue is recognised."
+    },
+    {
+      "question": "At month end, a revenue recognition entry for a prepaid contract is…",
+      "options": [
+        "Dr Cash, Cr Revenue",
+        "Dr Deferred Revenue, Cr Revenue",
+        "Dr Accounts Receivable, Cr Revenue",
+        "Dr Revenue, Cr Deferred Revenue"
+      ],
+      "answer": 1,
+      "explanation": "Value moves out of the deferred liability into revenue."
+    },
+    {
+      "question": "Why not demo the Journal entries page?",
+      "options": [
+        "It is slow",
+        "It includes AR entries that are not revenue and confuse customers",
+        "It needs a paid plan",
+        "It only shows refunds"
+      ],
+      "answer": 1,
+      "explanation": "AR entries look like revenue movements but are not. Show revenue recognition jobs instead."
+    },
+    {
+      "question": "Using the API, posted_at falls in a closed period and auto_adjust_closed_period is true. What happens?",
+      "options": [
+        "The request fails",
+        "posted_at moves to the next open period",
+        "The entry is deleted",
+        "The period reopens"
+      ],
+      "answer": 1,
+      "explanation": "With false it raises PeriodClosedException; with true the date shifts to the next open period."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Journal entry vs invoice?",
+      "answer": "An invoice is the commercial document to the customer. A journal entry is the accounting record of debit and credit lines that results from events like invoice approval."
+    },
+    {
+      "type": "Difference",
+      "question": "AR entry vs revenue entry?",
+      "answer": "An AR entry records money you are owed after invoicing. A revenue entry moves deferred or unbilled value into revenue. They are different things."
+    },
+    {
+      "type": "Difference",
+      "question": "Pending vs forecasted vs estimated vs posted?",
+      "answer": "These are the journal entry status types in the API. Posted is the final state; the others describe entries not yet final."
+    },
+    {
+      "type": "Difference",
+      "question": "Revenue recognition job vs Journal entries page?",
+      "answer": "The job shows only revenue movements for the period and is where you review and transfer. The Journal entries page also contains AR entries."
+    },
+    {
+      "type": "Difference",
+      "question": "Deferred-to-revenue vs unbilled-to-revenue entries?",
+      "answer": "Deferred-to-revenue releases an already invoiced liability. Unbilled-to-revenue books revenue for service delivered before invoicing."
+    },
+    {
+      "type": "Difference",
+      "question": "Invoice approval vs payment entry?",
+      "answer": "Invoice approval raises AR (and deferred or clears unbilled). Payment moves cash up and AR down, leaving revenue untouched."
+    },
+    {
+      "type": "Difference",
+      "question": "Credit note vs refund entry?",
+      "answer": "Both reduce revenue and AR or cash. A credit note offsets an invoice; a refund returns money. Check exact lines for your setup."
+    },
+    {
+      "type": "Difference",
+      "question": "Posting date vs invoice date?",
+      "answer": "posted_at is the accounting date of the entry and decides the period; the invoice date is the date on the customer document."
+    },
+    {
+      "type": "Use case",
+      "question": "Close the books for a month.",
+      "answer": "Run the revenue recognition job for the period end, review the drafts, edit lines if needed, then transfer."
+    },
+    {
+      "type": "Use case",
+      "question": "Give two months free after a period has closed.",
+      "answer": "You cannot reopen the period. The adjustment lands in open periods using front load, straight line or back load."
+    },
+    {
+      "type": "Use case",
+      "question": "Prepaid for 3 months, then overage.",
+      "answer": "The prepayment is deferred and released as consumed; usage beyond the prepaid amount sits as unbilled revenue until invoiced."
+    },
+    {
+      "type": "Use case",
+      "question": "Post a manual correcting entry.",
+      "answer": "Use the create journal entry API with the right accounts, amounts and posted_at, or edit a draft line in the revenue recognition job."
+    },
+    {
+      "type": "Use case",
+      "question": "Show a prospect how revenue is booked.",
+      "answer": "Use revenue recognition jobs, not the Journal entries page."
+    },
+    {
+      "type": "Use case",
+      "question": "Tag entries by customer or product.",
+      "answer": "Journal lines carry optional reference IDs (customer, contract, invoice, product) and tags."
+    },
+    {
+      "type": "Edge case",
+      "question": "Posting into a closed period via API.",
+      "answer": "It raises PeriodClosedException unless auto_adjust_closed_period is true, which moves the date to the next open period."
+    },
+    {
+      "type": "Edge case",
+      "question": "Why can't invoices and journal entries both go to the ERP?",
+      "answer": "Both include an AR entry, so the ERP would double-count receivables."
+    },
+    {
+      "type": "Edge case",
+      "question": "Edit an entry after transfer?",
+      "answer": "The period is locked; corrections go into a later period."
+    },
+    {
+      "type": "Edge case",
+      "question": "Do journal lines have to balance?",
+      "answer": "Accounting says yes. The API page does not state whether the request validates it."
+    },
+    {
+      "type": "Edge case",
+      "question": "What unit do debits and credits use?",
+      "answer": "The API page does not state it. Confirm before posting."
+    },
+    {
+      "type": "Edge case",
+      "question": "Entries needing approval?",
+      "answer": "The journal entries article suggests human approval for sensitive adjustments such as cutoffs and large accruals; it presents this as best practice, not a Zenskar feature."
+    },
+    {
+      "type": "Edge case",
+      "question": "Large pushes to an ERP.",
+      "answer": "NetSuite may bottleneck on batches, QuickBooks Online imports handle about 1,000 CSV rows at a time and Xero allows two active tracking categories."
+    },
+    {
+      "type": "How it works",
+      "question": "Which events create entries?",
+      "answer": "Invoice approval, payment, revenue recognition and adjustments such as credit notes."
+    },
+    {
+      "type": "How it works",
+      "question": "How does Zenskar pick the debit side?",
+      "answer": "From the event: Accounts Receivable for invoices, Cash for payments and Deferred Revenue for recognised deferred revenue."
+    }
+  ]
+}

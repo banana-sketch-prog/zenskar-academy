@@ -1,0 +1,319 @@
+{
+  "key": "acct",
+  "name": "Accounting basics",
+  "group": "Accounting",
+  "description": "Double entry, debits and credits, accrual accounting, and the vocabulary every Zenskar conversation uses.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Every entry has equal debits and credits",
+    "Assets = Liabilities + Equity",
+    "Revenue is not the invoice amount",
+    "Deferred = prepaid = liability; unbilled = postpaid = asset"
+  ],
+  "learn": {
+    "intro": "You will be selling to controllers, revenue accountants and CFOs. This module is the minimum vocabulary to run a credible call. Zenskar's accounting is based on ASC 606.",
+    "subs": [
+      {
+        "title": "The rules of the ledger",
+        "cards": [
+          {
+            "title": "Double-entry",
+            "body": "Every transaction is entered twice: one debit and one credit, equal and opposite. Nothing is recorded once. If the sides disagree, something is wrong and you can find it.",
+            "example": "Sell a product for $200 cash: Dr Cash $200, Cr Sales revenue $200."
+          },
+          {
+            "title": "Debits and credits are directions",
+            "body": "Neither is good or bad. Which direction increases an account depends on the type of account. Total debits must equal total credits in every entry.",
+            "example": "A debit raises an asset such as cash, but lowers a liability such as deferred revenue."
+          },
+          {
+            "title": "The accounting equation",
+            "body": "Assets = Liabilities + Equity. Assets are what the company owns, liabilities are what it owes others, equity is what is left for the owners.",
+            "example": "Two founders put $50 each into a shop: $100 cash (asset) against $100 equity."
+          },
+          {
+            "title": "Cheat sheet",
+            "body": "Debit increases assets and expenses. Credit increases liabilities, equity and revenue. The opposite side decreases them.",
+            "example": "Customer pays $100: Dr Cash $100 (asset up), Cr Accounts Receivable $100 (asset down)."
+          }
+        ]
+      },
+      {
+        "title": "Accrual and revenue",
+        "cards": [
+          {
+            "title": "Accrual vs cash accounting",
+            "body": "Accrual records revenue and expenses when they are earned or incurred. Cash accounting records them when money moves.",
+            "example": "A $12,000 annual invoice raised in January: cash basis books $12,000 in January; accrual books it as service is delivered."
+          },
+          {
+            "title": "Matching principle",
+            "body": "Income earned sits in the same period as the expenses incurred to earn it.",
+            "example": "Service delivered in December and paid in January is December revenue, and December expense."
+          },
+          {
+            "title": "Revenue is not the invoice amount",
+            "body": "Invoicing is a commercial choice (prepaid or postpaid, monthly or annual). Revenue is recognised as service is delivered. Over a contract the two totals agree; month to month they rarely do.",
+            "example": "$12,000 billed annually upfront recognises $1,000 a month."
+          },
+          {
+            "title": "ASC 606, IFRS 15, Ind AS 115",
+            "body": "One framework with three names, five steps: identify the contract, identify performance obligations, determine the transaction price, allocate it, recognise revenue.",
+            "example": "If a client asks which one Zenskar supports, the answer is the framework, not the jurisdiction."
+          }
+        ]
+      },
+      {
+        "title": "The balances you will discuss daily",
+        "cards": [
+          {
+            "title": "Deferred revenue",
+            "body": "Invoiced or paid for service not yet delivered. A liability: you owe the customer that service. It burns down as you deliver.",
+            "example": "An annual prepaid invoice of $1,200 starts with $1,200 deferred and drops $100 a month."
+          },
+          {
+            "title": "Unbilled revenue",
+            "body": "Service delivered but not yet invoiced. An asset (accrued revenue). It converts to accounts receivable when you invoice. Common with usage and postpaid billing.",
+            "example": "January usage with the invoice raised on Feb 1: January's revenue is unbilled until then."
+          },
+          {
+            "title": "Accounts receivable",
+            "body": "Money customers owe you for service already delivered, backed by an invoice. A current asset. It rises at invoice approval and clears when the customer pays.",
+            "example": "Approve a $1,200 invoice: AR up $1,200. Customer pays: AR down, cash up."
+          },
+          {
+            "title": "AR is not revenue",
+            "body": "AR is an invoicing event. Only deferred and unbilled balances convert into revenue.",
+            "example": "An invoice for last month's usage raises AR, but that revenue was already counted as unbilled."
+          },
+          {
+            "title": "Invoiced vs earned",
+            "body": "Invoiced more than earned means deferred revenue. Earned more than invoiced means unbilled revenue.",
+            "example": "A client who bills annually upfront carries a large deferred balance; one who bills in arrears on usage carries unbilled."
+          }
+        ]
+      },
+      {
+        "title": "Statements and boundaries",
+        "cards": [
+          {
+            "title": "The three statements",
+            "body": "The P&L covers a period. The balance sheet is a snapshot on one date. The cash flow statement shows where cash came from and went.",
+            "example": "Cash timing and revenue timing rarely match."
+          },
+          {
+            "title": "Period close",
+            "body": "Books close monthly. Once a period is locked it cannot change; corrections land in a later month.",
+            "example": "Books closed in September; an error found in October is corrected in October's books."
+          },
+          {
+            "title": "Materiality",
+            "body": "An auditor decides whether a difference is large enough to matter. You surface the gap; the client's auditor or CFO decides the treatment.",
+            "example": "Subscription differences usually pass; usage overages often do not."
+          },
+          {
+            "title": "Where Zenskar sits",
+            "body": "The ERP holds the general ledger. Zenskar manages the subset related to revenue and creates entries that sync to the ERP.",
+            "example": "Zenskar has data for revenue, deferred, unbilled, AR, customer cash, gateway fees and sales tax. It does not have payroll, loans or inventory."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Source note:</b> built from the internal Accounting Fundamentals deck and an internal training call, plus Zenskar's public docs."
+  },
+  "edgeCases": [
+    "<b>Labels backwards.</b> Deferred revenue is a liability; unbilled revenue is an asset. Getting them reversed in front of a CFO is costly.",
+    "<b>Revenue equals billing.</b> A common client mistake. It is wrong, and it makes reporting to shareholders and auditors inaccurate.",
+    "<b>AR rising, revenue flat.</b> Usually customers paying late, not growth. High AR with strong sales means cash is tied up.",
+    "<b>Cash-basis clients.</b> Some small clients still run cash accounting. Moving them to accrual leads to a prior-period adjustment conversation.",
+    "<b>Monthly vs daily recognition.</b> Both give the same annual total; monthly figures differ for 28, 30 and 31 day months. The client's accountant decides.",
+    "<b>Equity.</b> Profits are transferred into equity, so revenue increases equity and expense decreases it.",
+    "<b>Scope.</b> Zenskar does not hold payroll, loan, operating expense or inventory data. Imported opening balances cover what existed before go-live."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "",
+    "groups": [
+      {
+        "title": "No API in this module",
+        "items": [
+          "This module is conceptual. See Chart of accounts, Journal entries and Revenue recognition for the accounting operations."
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Why is deferred revenue a liability?",
+      "options": [
+        "It is a tax owed",
+        "You were paid for service you still owe the customer",
+        "It reduces equity",
+        "It is cash held for suppliers"
+      ],
+      "answer": 1,
+      "explanation": "You hold the customer's money against a promise to deliver service, so it sits on the liability side until earned."
+    },
+    {
+      "question": "A customer pays an outstanding invoice of $100. Which entry is right?",
+      "options": [
+        "Dr Cash, Cr Accounts Receivable",
+        "Dr Accounts Receivable, Cr Cash",
+        "Dr Revenue, Cr Cash",
+        "Dr Cash, Cr Revenue"
+      ],
+      "answer": 0,
+      "explanation": "Cash (asset) goes up with a debit and receivables (asset) go down with a credit. Revenue is not touched at payment."
+    },
+    {
+      "question": "A client bills $60,000 annually upfront on 1 April and recognises straight-line by month. What is the deferred balance on 30 June?",
+      "options": [
+        "$15,000",
+        "$45,000",
+        "$60,000",
+        "$0"
+      ],
+      "answer": 1,
+      "explanation": "Three months are earned ($15,000), so $45,000 remains deferred."
+    },
+    {
+      "question": "You earned more than you have invoiced. What do you hold?",
+      "options": [
+        "Deferred revenue (a liability)",
+        "Unbilled revenue (an asset)",
+        "Accounts payable",
+        "Retained earnings"
+      ],
+      "answer": 1,
+      "explanation": "Service delivered but not invoiced is unbilled revenue, an asset that becomes AR at invoicing."
+    },
+    {
+      "question": "Which is the correct order of the five ASC 606 steps?",
+      "options": [
+        "Contract, obligations, price, allocate, recognise",
+        "Price, contract, recognise, obligations, allocate",
+        "Obligations, contract, allocate, price, recognise",
+        "Recognise, contract, price, allocate, obligations"
+      ],
+      "answer": 0,
+      "explanation": "Identify the contract, identify performance obligations, determine the price, allocate it, then recognise revenue."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Debit vs credit?",
+      "answer": "They are the two sides of an entry. Neither is good or bad. A debit raises assets and expenses and lowers liabilities, equity and revenue; a credit does the reverse."
+    },
+    {
+      "type": "Difference",
+      "question": "Deferred revenue vs unbilled revenue?",
+      "answer": "Deferred revenue is paid or invoiced but not yet delivered, a liability. Unbilled revenue is delivered but not yet invoiced, an asset. Compare what you invoiced to what you earned."
+    },
+    {
+      "type": "Difference",
+      "question": "Accounts receivable vs revenue?",
+      "answer": "AR is an invoicing event: money you are owed. Revenue is earned through delivery. AR can rise with no new revenue if customers pay late."
+    },
+    {
+      "type": "Difference",
+      "question": "Accrual vs cash accounting?",
+      "answer": "Accrual records when earned or incurred, cash records when money moves. On a $12,000 annual invoice, cash accounting books all of it at once while accrual spreads it across the service period."
+    },
+    {
+      "type": "Difference",
+      "question": "Bookings vs billings vs revenue vs cash?",
+      "answer": "Bookings are contracted value signed, billings are amounts invoiced, revenue is what has been earned under the accounting rules, cash is money received. They rarely match in a given month."
+    },
+    {
+      "type": "Difference",
+      "question": "Balance sheet vs P&L vs cash flow statement?",
+      "answer": "The balance sheet is a snapshot of assets, liabilities and equity on one date. The P&L covers a period of revenue and expense. The cash flow statement tracks cash movement."
+    },
+    {
+      "type": "Difference",
+      "question": "ASC 606 vs IFRS 15 vs Ind AS 115?",
+      "answer": "They are the US, international and Indian names for the same five-step revenue framework. For our purposes they are functionally equivalent."
+    },
+    {
+      "type": "Difference",
+      "question": "Liability vs equity?",
+      "answer": "Liabilities are owed to others (loans, payables, deferred revenue, sales tax). Equity is what is left for the owners after liabilities are covered."
+    },
+    {
+      "type": "Use case",
+      "question": "A client bills annually upfront. What will their balance sheet show?",
+      "answer": "A large deferred revenue balance (a liability) that steps down as service is delivered."
+    },
+    {
+      "type": "Use case",
+      "question": "A client bills monthly in arrears on usage. What will dominate?",
+      "answer": "Unbilled revenue (an asset) that grows through the month and clears when the invoice is raised."
+    },
+    {
+      "type": "Use case",
+      "question": "A customer asks why revenue is not equal to their invoices.",
+      "answer": "Invoicing is a commercial decision; revenue follows delivery. Over the contract life the totals match, but month to month they differ, and managing that gap is what Zenskar does."
+    },
+    {
+      "type": "Use case",
+      "question": "A client has no service logs and sets revenue equal to billing. What do you do?",
+      "answer": "Surface the gap and its risk (compliance, reporting, audit). The client's auditor or CFO decides the treatment. You compute and show; you do not decide."
+    },
+    {
+      "type": "Use case",
+      "question": "A customer prepays $10,000, draws it down, then pays overage. Where does the money go?",
+      "answer": "The prepayment starts as deferred revenue and is recognised as it is consumed. Usage beyond the prepaid amount is unbilled until it is invoiced."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can an entry have debits that differ from credits?",
+      "answer": "No. In double-entry accounting total debits equal total credits in every entry. If they differ, something is wrong."
+    },
+    {
+      "type": "Edge case",
+      "question": "AR is climbing while revenue is flat. What is happening?",
+      "answer": "Likely customers are paying late. The CFO cares because cash is tied up and near-term obligations may be hard to meet."
+    },
+    {
+      "type": "Edge case",
+      "question": "The books are closed and you find an error.",
+      "answer": "You cannot reopen the period. The correction lands in a later month, and an auditor judges whether the difference is material."
+    },
+    {
+      "type": "Edge case",
+      "question": "Is deferred revenue free money?",
+      "answer": "The cash is in the bank and no interest is paid on it, but it is still a liability because you owe the service. Leverage sits with the customer."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does recognising by day vs by month change the annual total?",
+      "answer": "No. Both sum to the same annual figure; monthly numbers differ for 28, 30 and 31 day months."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does Zenskar hold payroll or loan data?",
+      "answer": "No. It holds the revenue-related subset of the general ledger: revenue, deferred, unbilled, AR, customer cash, gateway fees and sales tax."
+    },
+    {
+      "type": "How it works",
+      "question": "What happens in the books when an invoice is approved?",
+      "answer": "Accounts receivable goes up. For a future-period prepaid invoice the other side is deferred revenue; for service already delivered it clears unbilled revenue."
+    },
+    {
+      "type": "How it works",
+      "question": "Why does Zenskar sit on top of an ERP?",
+      "answer": "The ERP is the single source of truth, but billing is its weakest area. Zenskar handles complex pricing and revenue entries and syncs them to the ERP."
+    },
+    {
+      "type": "How it works",
+      "question": "What is the matching principle?",
+      "answer": "Income earned belongs in the same period as the expenses incurred to earn it, regardless of when cash moves."
+    }
+  ]
+}

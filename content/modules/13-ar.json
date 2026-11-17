@@ -1,0 +1,314 @@
+{
+  "key": "ar",
+  "name": "A/R and reports",
+  "group": "Accounting",
+  "description": "Accounts receivable, aging, bad debt, and the reports finance asks for by name.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Unbilled becomes AR at invoicing; AR becomes cash at collection",
+    "AR can rise with no new revenue if customers pay late",
+    "Aging buckets show who is late and by how much",
+    "Ask whether a client means the revenue waterfall or the revenue schedule"
+  ],
+  "learn": {
+    "intro": "Accounts receivable is the number finance teams watch daily. This module covers how it behaves, how to read an aging report, and the reports you will be asked for by name.",
+    "subs": [
+      {
+        "title": "Accounts receivable",
+        "cards": [
+          {
+            "title": "What AR is",
+            "body": "Money owed to the company by customers for service already delivered, backed by an invoice. A current asset, because it is expected to convert to cash within a year.",
+            "example": "Invoice issued: AR up. Payment received: AR down, cash up."
+          },
+          {
+            "title": "Three stages of the same dollar",
+            "body": "Unbilled revenue becomes accounts receivable at invoicing, and AR becomes cash at collection.",
+            "example": "$300 of January usage: unbilled, then AR on Feb 1, then cash on payment."
+          },
+          {
+            "title": "AR is not proportional to revenue",
+            "body": "AR can rise with no new revenue if customers pay late, and fall while revenue grows if collections speed up.",
+            "example": "Flat revenue with climbing AR means collections are slowing."
+          },
+          {
+            "title": "High AR is a liquidity signal",
+            "body": "Strong sales with high AR means cash is tied up and near-term obligations may be hard to meet.",
+            "example": "The CFO asks why growth is not showing up in the bank."
+          },
+          {
+            "title": "Bad debt and the allowance",
+            "body": "Some balances never arrive. Uncollectible amounts become bad debt, and companies hold an allowance for doubtful accounts against them.",
+            "example": "An allowance grows as invoices slip into older buckets."
+          }
+        ]
+      },
+      {
+        "title": "The A/R aging report",
+        "cards": [
+          {
+            "title": "What it shows",
+            "body": "Unpaid invoices grouped by how long they have been outstanding. It works as an early warning for collections, cash flow and credit risk.",
+            "example": "Customer X: $5,000 current, $2,000 at 31 to 60 days."
+          },
+          {
+            "title": "Standard buckets",
+            "body": "Current, 1 to 30 days overdue, 31 to 60, 61 to 90 and 90 plus. Companies with short payment terms may use 15-day intervals.",
+            "example": "An invoice due Mar 31 is in the 1 to 30 bucket on Apr 10."
+          },
+          {
+            "title": "How to read it",
+            "body": "Check the layout, find high-risk customers (large balances, repeatedly 90 plus), drill into invoices to cross-check payments, and look for recurring disputes.",
+            "example": "A customer always in 90 plus may need a credit-term change."
+          },
+          {
+            "title": "Key metrics",
+            "body": "DSO is the average days customers take to pay. CEI measures collection effectiveness. Average days delinquent is how late customers typically pay. AR turnover is how often receivables are collected in a period.",
+            "example": "DSO rising quarter on quarter means slower payers."
+          },
+          {
+            "title": "Allowance and CECL",
+            "body": "Aging data feeds the estimate of expected credit losses. The reserve rises as accounts move into older buckets.",
+            "example": "Zenskar's article uses illustrative rates of 1%, 5%, 15% and 50% by bucket."
+          }
+        ]
+      },
+      {
+        "title": "Reports you will be asked for",
+        "cards": [
+          {
+            "title": "Revenue waterfall",
+            "body": "How deferred revenue flows into recognised revenue over time, across one contract or a whole book.",
+            "example": "$12,000 annual: $1,000 recognised each month while deferred steps down by $1,000."
+          },
+          {
+            "title": "Revenue schedule",
+            "body": "A dated timetable for a single contract showing how its value breaks into periods under the configured rule.",
+            "example": "The same contract as twelve dated rows of $1,000."
+          },
+          {
+            "title": "Ask which they mean",
+            "body": "Clients use waterfall and schedule loosely and often interchangeably. Clarify before promising anything.",
+            "example": "\"Show me the revenue by month\" could be either."
+          },
+          {
+            "title": "Balance sheet and income statement",
+            "body": "Reports from the accounting module. The API exposes the balance sheet, the income statement and balances by tag.",
+            "example": "Check deferred revenue and unbilled revenue on the balance sheet at month end."
+          },
+          {
+            "title": "Billing and collections analytics",
+            "body": "Invoice and outstanding analytics sit under Insights. The collections module is about outstanding receivables, customer segmentation, templates and dunning.",
+            "example": "Confirm exact report names in the product."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Source note:</b> AR and report concepts come from the internal Accounting Fundamentals deck and Zenskar's AR aging article. I could not read the product page for invoice analytics, so confirm report names in the app."
+  },
+  "edgeCases": [
+    "<b>AR up, revenue flat.</b> Late payment, not growth.",
+    "<b>Different bucket labels.</b> Some sources start at Current, others at 0 to 30 days. Agree the definition with the client.",
+    "<b>Short payment terms.</b> Companies may prefer 15-day buckets.",
+    "<b>Illustrative allowance rates.</b> The 1/5/15/50 percent figures are an example, not a Zenskar default.",
+    "<b>Waterfall vs schedule.</b> Clients mix the terms; clarify first.",
+    "<b>Payment application.</b> An ACH credit transfer is applied to the customer's oldest pending invoice first, which changes which bucket clears.",
+    "<b>Imported invoices.</b> Invoices imported from another system cannot be charged from Zenskar."
+  ],
+  "api": {
+    "note": "Operation names only. Paths were not confirmed in the docs I read.",
+    "endpointSet": "accounting",
+    "groups": [
+      {
+        "title": "Reports",
+        "items": [
+          "Get balance sheet",
+          "Get income statement",
+          "Get balance by tag"
+        ]
+      },
+      {
+        "title": "Invoices and payments",
+        "items": [
+          "List invoices",
+          "Get invoice payments",
+          "Get payments"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "AR is climbing while revenue is flat. What is most likely happening?",
+      "options": [
+        "Customers are paying late",
+        "Prices rose",
+        "Deferred revenue grew",
+        "Revenue is being recognised early"
+      ],
+      "answer": 0,
+      "explanation": "AR can rise without new revenue when customers pay late, tying up cash."
+    },
+    {
+      "question": "When does unbilled revenue become accounts receivable?",
+      "options": [
+        "At payment",
+        "At invoicing",
+        "At period close",
+        "At contract signing"
+      ],
+      "answer": 1,
+      "explanation": "Invoicing converts the right to collect into a receivable."
+    },
+    {
+      "question": "A customer is consistently in the 90 plus bucket. What does that signal?",
+      "options": [
+        "A billing error",
+        "High credit risk",
+        "Prepayment",
+        "A tax issue"
+      ],
+      "answer": 1,
+      "explanation": "Repeated 90 plus balances are a credit-risk flag."
+    },
+    {
+      "question": "Which report shows how deferred revenue steps down into recognised revenue over time?",
+      "options": [
+        "AR aging",
+        "Revenue waterfall",
+        "Cash flow statement",
+        "Trial balance"
+      ],
+      "answer": 1,
+      "explanation": "The waterfall shows deferred flowing into revenue; the schedule is the dated timetable for one contract."
+    },
+    {
+      "question": "A client asks for the revenue schedule. What should you do first?",
+      "options": [
+        "Send the waterfall",
+        "Confirm which of the two they mean",
+        "Open the journal entries page",
+        "Run the rev rec job"
+      ],
+      "answer": 1,
+      "explanation": "Clients use the terms interchangeably, so ask before promising anything."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "AR vs unbilled vs deferred revenue?",
+      "answer": "AR is invoiced and not yet collected (asset). Unbilled is delivered and not yet invoiced (asset). Deferred is invoiced or paid and not yet delivered (liability)."
+    },
+    {
+      "type": "Difference",
+      "question": "AR vs cash?",
+      "answer": "Collection moves value from AR to cash. Total assets are unchanged; one asset becomes a more useful one."
+    },
+    {
+      "type": "Difference",
+      "question": "AR aging vs a list of outstanding invoices?",
+      "answer": "An invoice list shows each document. Aging groups the balances by how overdue they are, per customer, so risk is visible."
+    },
+    {
+      "type": "Difference",
+      "question": "DSO vs aging?",
+      "answer": "DSO is one average number for the whole book. Aging shows the distribution across buckets and customers."
+    },
+    {
+      "type": "Difference",
+      "question": "Bad debt vs allowance for doubtful accounts?",
+      "answer": "Bad debt is an amount actually written off. The allowance is an estimate set aside in advance for expected losses."
+    },
+    {
+      "type": "Difference",
+      "question": "Revenue waterfall vs revenue schedule?",
+      "answer": "The waterfall shows deferred flowing into revenue across contracts. The schedule is a dated timetable for one contract."
+    },
+    {
+      "type": "Difference",
+      "question": "Current vs overdue?",
+      "answer": "Current invoices are within their payment terms. Overdue invoices are past the due date and fall into aging buckets."
+    },
+    {
+      "type": "Difference",
+      "question": "Balance sheet vs AR aging?",
+      "answer": "The balance sheet shows total receivables on a date. Aging breaks that total down by how late each balance is."
+    },
+    {
+      "type": "Use case",
+      "question": "The CFO asks which customers are paying late.",
+      "answer": "Use aging by customer and look at the oldest buckets."
+    },
+    {
+      "type": "Use case",
+      "question": "Sales are strong but cash is tight.",
+      "answer": "Check AR. High AR relative to revenue means customers are not paying promptly."
+    },
+    {
+      "type": "Use case",
+      "question": "Design a dunning sequence for overdue invoices.",
+      "answer": "One example: a reminder before the due date, one on the due date, then escalating reminders at 30 and 60 days overdue with segmentation by customer size and balance. Adapt to the client's terms."
+    },
+    {
+      "type": "Use case",
+      "question": "Set aside a reserve for doubtful accounts.",
+      "answer": "Apply a collectability rate to each aging bucket. Zenskar's article uses 1, 5, 15 and 50 percent as an illustration."
+    },
+    {
+      "type": "Use case",
+      "question": "Segment customers for collections.",
+      "answer": "Segment by days overdue, balance size and customer history, then tailor email templates and follow-up."
+    },
+    {
+      "type": "Use case",
+      "question": "Answer five common finance questions with one dashboard.",
+      "answer": "Outstanding by customer, overdue by bucket, revenue by company and customer, usage and invoices; confirm the exact reports in Insights."
+    },
+    {
+      "type": "Edge case",
+      "question": "AR rises with no new revenue.",
+      "answer": "Customers are paying late."
+    },
+    {
+      "type": "Edge case",
+      "question": "Aging bucket labels differ between sources.",
+      "answer": "Some start with Current, others with 0 to 30 days. Agree the definition with the client."
+    },
+    {
+      "type": "Edge case",
+      "question": "Terms are short, so 30-day buckets are too coarse.",
+      "answer": "Use 15-day intervals."
+    },
+    {
+      "type": "Edge case",
+      "question": "A payment arrives that does not name an invoice.",
+      "answer": "An ACH credit transfer is applied to the oldest pending invoice first."
+    },
+    {
+      "type": "Edge case",
+      "question": "A customer pays part of an invoice.",
+      "answer": "The invoice becomes partially paid and the remaining balance stays in AR and in its aging bucket."
+    },
+    {
+      "type": "Edge case",
+      "question": "A credit note is issued.",
+      "answer": "It reduces what the customer owes against that invoice, lowering AR."
+    },
+    {
+      "type": "How it works",
+      "question": "How is AR created and cleared?",
+      "answer": "Invoice approval creates the AR entry. Payment clears it."
+    },
+    {
+      "type": "How it works",
+      "question": "Where do the reports live?",
+      "answer": "Revenue and balance reports sit in the accounting module, invoice and outstanding analytics under Insights, and collections work under receivables."
+    }
+  ]
+}

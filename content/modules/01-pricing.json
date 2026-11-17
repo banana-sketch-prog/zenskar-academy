@@ -264,6 +264,21 @@
       "type": "How it works",
       "question": "What does archived mean for a product?",
       "answer": "End of life. It is unavailable for new usage and cannot be set when creating a product."
+    },
+    {
+      "type": "Edge case",
+      "question": "Is matrix pricing production-friendly?",
+      "answer": "Per an internal training call, it works well for demos and getting customers excited, but few customers use it without problems and several capabilities still need to be added. Set expectations before promising it."
+    },
+    {
+      "type": "How it works",
+      "question": "Why does matrix pricing need a metric and not a fixed quantity?",
+      "answer": "A matrix metric returns two columns, a dimension and a quantity. A fixed quantity input holds only one quantity, and the UI has no way to add a dimension to it. Matrix pricing also has a default price used when usage falls into no listed dimension."
+    },
+    {
+      "type": "Edge case",
+      "question": "Is there a limit on matrix rows or columns?",
+      "answer": "None was mentioned on the training call, but very large matrices with hundreds of variations have been hard to scale in practice."
     }
   ]
 }

@@ -39,7 +39,31 @@ function invoiceDateCalculator() {
     w.querySelector('#s').innerHTML = '1. Reference: ' + d + '<br>2. Offset: ' + (o >= 0 ? '+' : '') + o + ' month(s)<br>3. Pin: ' + (p == 'last' ? 'last day of the month' : 'same day number (clamped to month length)'); };
   w.querySelectorAll('input,select').forEach(x => x.oninput = u); u(); return w;
 }
-const WIDGETS = { 'pricing-calculator': pricingCalculator, 'invoice-date-calculator': invoiceDateCalculator };
+function journalWalkthrough() {
+  const SC = {
+    prepaid: { name: 'Prepaid: $1,200 annual subscription', steps: [
+      ['Invoice approved', 'Dr Accounts Receivable 1,200 / Cr Deferred Revenue 1,200', [['AR', 1200], ['DEF', 1200]]],
+      ['Payment received', 'Dr Cash 1,200 / Cr Accounts Receivable 1,200', [['CASH', 1200], ['AR', -1200]]],
+      ['Month 1 recognised', 'Dr Deferred Revenue 100 / Cr Revenue 100', [['DEF', -100], ['REV', 100]]],
+      ['Month 2 recognised', 'Dr Deferred Revenue 100 / Cr Revenue 100', [['DEF', -100], ['REV', 100]]]] },
+    postpaid: { name: 'Postpaid: $300 of usage, invoiced next month', steps: [
+      ['Usage delivered, not yet invoiced', 'Dr Unbilled Revenue 300 / Cr Revenue 300', [['UNB', 300], ['REV', 300]]],
+      ['Invoice approved (Feb 1)', 'Dr Accounts Receivable 300 / Cr Unbilled Revenue 300', [['AR', 300], ['UNB', -300]]],
+      ['Payment received', 'Dr Cash 300 / Cr Accounts Receivable 300', [['CASH', 300], ['AR', -300]]]] } };
+  const ACC = { CASH: ['Cash', 'asset'], AR: ['Accounts Receivable', 'asset'], UNB: ['Unbilled Revenue', 'asset'], DEF: ['Deferred Revenue', 'liability'], REV: ['Revenue', 'income'] };
+  const w = el(`<p>Step through the life of a sale and watch the balances move. Asset balances normally sit on the debit side; liability and income balances on the credit side. Amounts are illustrative.</p><label for=sc>Scenario</label><select id=sc>${Object.keys(SC).map(k => '<option value=' + k + '>' + SC[k].name + '</option>').join('')}</select><div class=card style="margin-top:14px"><div class=total id=jt></div><div id=jd></div><table id=jb style="margin-top:10px;width:100%"></table><br><button class=opt style="display:inline-block;width:auto" id=jp>Previous</button> <button class=opt style="display:inline-block;width:auto" id=jn>Next</button> <button class=opt style="display:inline-block;width:auto" id=jr>Reset</button></div>`);
+  let i = 0;
+  const u = () => { const sc = SC[w.querySelector('#sc').value] || SC.prepaid; const bal = {}; Object.keys(ACC).forEach(k => bal[k] = 0);
+    for (let j = 0; j < i; j++) sc.steps[j][2].forEach(([a, v]) => bal[a] += v);
+    w.querySelector('#jt').textContent = i ? 'Step ' + i + ' of ' + sc.steps.length + ': ' + sc.steps[i - 1][0] : 'Start: no entries yet';
+    w.querySelector('#jd').textContent = i ? sc.steps[i - 1][1] : 'Press Next to post the first entry.';
+    w.querySelector('#jb').innerHTML = '<tr><th align=left>Account</th><th align=right>Balance</th><th align=left>&nbsp;Normal side</th></tr>' + Object.keys(ACC).map(k => '<tr><td>' + ACC[k][0] + '</td><td align=right>' + money(bal[k]) + '</td><td>&nbsp;' + (ACC[k][1] == 'asset' ? 'Debit' : 'Credit') + '</td></tr>').join('');
+    w.querySelector('#jp').disabled = i == 0; w.querySelector('#jn').disabled = i == sc.steps.length; };
+  w.querySelector('#sc').onchange = () => { i = 0; u(); };
+  w.querySelector('#jn').onclick = () => { i++; u(); }; w.querySelector('#jp').onclick = () => { i--; u(); }; w.querySelector('#jr').onclick = () => { i = 0; u(); };
+  u(); return w;
+}
+const WIDGETS = { 'pricing-calculator': pricingCalculator, 'invoice-date-calculator': invoiceDateCalculator, 'journal-walkthrough': journalWalkthrough };
 
 /* ---------- building blocks ---------- */
 const card = c => `<div class="card"><h3>${c.title}</h3>${c.body || ''}${c.example ? `<div class="ex"><b>Example:</b> ${c.example}</div>` : ''}</div>`;
@@ -105,7 +129,8 @@ function reviewBadge(m) {
   return `<div class="review ${ok ? 'reviewed' : 'draft'}">${ok ? 'Reviewed by ' + (r.reviewedBy || 'SME') + (r.date ? ' on ' + r.date : '') : 'Draft: not yet reviewed by a Zenskar SME'}</div>`;
 }
 function moduleView(m) {
-  const w = el('<h2>' + m.name + '</h2>' + reviewBadge(m));
+  const w = el('<h2>' + m.name + '</h2>' + reviewBadge(m) + '<button class=opt id=cl style="display:inline-block;width:auto;margin:6px 0">Copy link to this module</button>');
+  w.querySelector('#cl').onclick = function () { copyTxt(location.href.split('#')[0] + '#/' + m.key, this); };
   const names = ['Learn']; if (m.widget) names.push('Try it'); names.push('Edge cases', 'API', 'Quiz', 'Q&A');
   w.appendChild(tabs(names, n => {
     if (n == 'Learn') return el((m.learn.intro ? '<p>' + m.learn.intro + '</p>' : '') + m.learn.subs.map((s, j) => `<h3 id="s${j}">${s.title}</h3><div class="grid">${s.cards.map(card).join('')}</div>`).join('') + (m.learn.outro ? `<div class="note">${m.learn.outro}</div>` : ''));
