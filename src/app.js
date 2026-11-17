@@ -126,6 +126,7 @@ window.jump = j => { document.querySelector('.tabs button').click(); setTimeout(
 /* ---------- views ---------- */
 function reviewBadge(m) {
   const r = m.review || {}; const ok = r.status == 'reviewed';
+  if (!ok) return '';
   return `<div class="review ${ok ? 'reviewed' : 'draft'}">${ok ? 'Reviewed by ' + (r.reviewedBy || 'SME') + (r.date ? ' on ' + r.date : '') : 'Draft: not yet reviewed by a Zenskar SME'}</div>`;
 }
 function moduleView(m) {
