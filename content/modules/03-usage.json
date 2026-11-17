@@ -1,0 +1,307 @@
+{
+  "key": "usage",
+  "name": "Usage and metering",
+  "group": "Foundations",
+  "description": "Events, data sources and billable metrics.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Events in, billable metrics out",
+    "Events cannot be edited or deleted",
+    "Visual builder to SQL builder is one way"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Usage events",
+        "cards": [
+          {
+            "title": "Usage event",
+            "body": "A report of one customer's usage at one point in time. What it reports is up to you: one action, a count over a minute, seats at noon, a file size.",
+            "example": "14 API calls by customer c01 at 09:15."
+          },
+          {
+            "title": "Collection and schema",
+            "body": "A collection is a named set of events with one data schema and one API slug. Two root fields are required: customer_id (String) and timestamp (DateTime64). Data fields hold the details.",
+            "example": "Collection api_calls with data.region and data.size_kb."
+          },
+          {
+            "title": "Four ways in",
+            "body": "CSV file (one bad row means nothing is stored), one event manually, the collection's API endpoint with an API key, or S3 ingestion.",
+            "example": "POST to https://api.zenskar.com/usage/api_calls with x-api-key."
+          },
+          {
+            "title": "Data field types",
+            "body": "String, Int64, Float64, Date32, DateTime64, UUID, Bool. Fields can be added later but not removed, renamed or retyped.",
+            "example": "size_kb is Float64: 12.5."
+          }
+        ]
+      },
+      {
+        "title": "Data sources",
+        "cards": [
+          {
+            "title": "Connector",
+            "body": "Instead of sending events, Zenskar can read usage from your systems through a connector such as PostgreSQL, Snowflake or BigQuery.",
+            "example": "The api_calls table in your warehouse."
+          },
+          {
+            "title": "Synced vs remote",
+            "body": "A synced source is copied on a schedule (sync frequency and cursor columns keep it current). A remote source is queried in place.",
+            "example": "Redshift as a remote source queried from the SQL builder."
+          },
+          {
+            "title": "S3 ingestion",
+            "body": "CSV files in a per-collection folder of your S3 bucket are read as they arrive. Webhooks report ingestion.completed and ingestion.failed.",
+            "example": "api_calls/2026-10-01.csv becomes api_calls events."
+          }
+        ]
+      },
+      {
+        "title": "Billable metrics",
+        "cards": [
+          {
+            "title": "Four steps",
+            "body": "A metric filters rows, matches each row to a customer, keeps the rows of the period, then aggregates.",
+            "example": "12,000 API calls for one customer in October."
+          },
+          {
+            "title": "Visual builder",
+            "body": "Pick a table, filters, customer column, date column and one calculation type: count, sum, maximum, average, minimum or unique count. Count is the default.",
+            "example": "Sum of size_kb where region = eu-west."
+          },
+          {
+            "title": "SQL builder",
+            "body": "Write a query. One value is the metric. With several columns, name the number quantity and the rest become dimensions (for dimensional pricing). Tables are named raw_metric_ plus the API slug.",
+            "example": "<code>SELECT COUNT(*) AS quantity FROM raw_metric_api_calls WHERE customer_id = {{customer.external_id}}</code>"
+          },
+          {
+            "title": "SQL variables",
+            "body": "Zenskar fills in customer, contract, product and period values, including custom attributes: {{start_date}}, {{end_date}}, {{customer.custom_attributes.key}}.",
+            "example": "Filter usage by {{customer.external_id}}."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Immutable events.</b> Usage events cannot be edited or deleted and collections cannot be deleted. Corrections follow the correct historical usage guide.",
+    "<b>Schema is permanent.</b> A data field cannot be removed, renamed or retyped, and the API slug never changes.",
+    "<b>CSV is all or nothing.</b> If one row fails the schema check, none are stored.",
+    "<b>One-way move.</b> A visual-builder metric moved to the SQL builder cannot return.",
+    "<b>Missing quantity column.</b> A multi-column query without a column named quantity gives 0 or fails.",
+    "<b>No value vs 0.</b> A sum over a month with no events gives no value; a count gives 0. This can change the charge, so wrap sums in COALESCE.",
+    "<b>Deleting a metric.</b> It is allowed even when a pricing preset uses it, and can affect contracts and invoices.",
+    "<b>Customer matching.</b> By default customer_id is matched to the customer external ID or Zenskar ID. Mismatched IDs mean unbilled usage.",
+    "<b>BigQuery.</b> May need fully qualified table names."
+  ],
+  "api": {
+    "note": "Documented endpoint for sending events: <code>https://api.zenskar.com/usage/{api_slug}</code>, with an API key in the x-api-key header, carrying one event or a list. The API reference also lists an update operation for usage events, while the product guide says events cannot be edited. Confirm behaviour with an SME before relying on it.",
+    "endpointSet": "usage",
+    "groups": [
+      {
+        "title": "Usage events",
+        "items": [
+          "List usage events",
+          "Create usage event",
+          "Get usage event by ID",
+          "Get usage event by slug",
+          "Update usage event"
+        ]
+      },
+      {
+        "title": "Billable metrics",
+        "items": [
+          "List, create, get, update and delete billable metric",
+          "Get aggregate estimates for a period (metric, customer, date range)"
+        ]
+      },
+      {
+        "title": "Data sources",
+        "items": [
+          "List, create, get and update data-source connector"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which two root fields does every usage event need?",
+      "options": [
+        "customer_id and timestamp",
+        "id and name",
+        "customer_id and quantity"
+      ],
+      "answer": 0,
+      "explanation": "These are the only root fields Zenskar requires at the top level."
+    },
+    {
+      "question": "A CSV has 500 rows and one fails the schema check. What happens?",
+      "options": [
+        "499 rows are stored",
+        "No rows are stored",
+        "The bad row is skipped silently"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar validates every row first and stores none if one fails."
+    },
+    {
+      "question": "You find a wrong usage event. Can you edit it in the product?",
+      "options": [
+        "Yes, in the collection",
+        "No, events cannot be edited or deleted",
+        "Only within 24 hours"
+      ],
+      "answer": 1,
+      "explanation": "Use the historical usage correction approach instead."
+    },
+    {
+      "question": "A SQL builder query returns region and quantity columns. What does the metric give?",
+      "options": [
+        "One total",
+        "One quantity per region (dimension)",
+        "An error"
+      ],
+      "answer": 1,
+      "explanation": "Other columns become dimensions, which dimensional pricing uses."
+    },
+    {
+      "question": "A sum over a month with no events returns…",
+      "options": [
+        "0",
+        "No value, unlike count which returns 0",
+        "An error"
+      ],
+      "answer": 1,
+      "explanation": "No value and 0 can lead to different charges."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Usage event definition vs usage event?",
+      "answer": "A definition (collection, created at /rawmetrics) is the schema and API slug. A usage event is one record sent to /usage/{api_slug}."
+    },
+    {
+      "type": "Difference",
+      "question": "Usage events vs aggregates?",
+      "answer": "Events are individual timestamped records. Aggregates are pre-summarized values, which can be used directly without aggregation."
+    },
+    {
+      "type": "Difference",
+      "question": "Usage event vs billable metric?",
+      "answer": "The event is raw data. The billable metric turns events into the billable quantity for a customer and period."
+    },
+    {
+      "type": "Difference",
+      "question": "Synced vs remote data source?",
+      "answer": "Synced is copied on a schedule. Remote is queried in place."
+    },
+    {
+      "type": "Difference",
+      "question": "Visual builder vs SQL builder?",
+      "answer": "Visual builder offers one calculation on filtered rows. SQL builder allows any query and multi-column results, but you cannot move back to visual."
+    },
+    {
+      "type": "Difference",
+      "question": "Count vs unique count?",
+      "answer": "Count counts rows. Unique count counts distinct values of a chosen column, so retried events with the same ID count once."
+    },
+    {
+      "type": "Difference",
+      "question": "Sum vs maximum?",
+      "answer": "Sum adds values over the period; maximum keeps the peak, useful for peak concurrent seats."
+    },
+    {
+      "type": "Difference",
+      "question": "CSV vs API vs S3 ingestion?",
+      "answer": "CSV is a one-off upload (all or nothing). API is real time per event. S3 reads CSV files as they land in a per-collection folder."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill per API call?",
+      "answer": "Count of events in the period."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill the busiest hour of seats used?",
+      "answer": "Maximum."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill distinct active users?",
+      "answer": "Unique count on the user column."
+    },
+    {
+      "type": "Use case",
+      "question": "Usage already sits in Snowflake?",
+      "answer": "Connect it as a data source and read from it instead of re-sending events."
+    },
+    {
+      "type": "Use case",
+      "question": "Protect against retried requests?",
+      "answer": "Include an event ID field in data and use unique count or COUNT(DISTINCT). Zenskar stores events as they arrive, so plain count would include both."
+    },
+    {
+      "type": "Use case",
+      "question": "Different price per region?",
+      "answer": "Return quantity plus a region dimension from SQL and use dimensional pricing."
+    },
+    {
+      "type": "Edge case",
+      "question": "A usage event is wrong. Can I edit or delete it?",
+      "answer": "Not in the product. Events and collections cannot be edited or deleted; use the historical usage correction guide."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I rename or remove a data field?",
+      "answer": "No. Fields can be added later but not removed, renamed or retyped, and the API slug never changes."
+    },
+    {
+      "type": "Edge case",
+      "question": "One CSV row fails validation?",
+      "answer": "No rows are stored."
+    },
+    {
+      "type": "Edge case",
+      "question": "A month has no events: sum or count?",
+      "answer": "Sum gives no value while count gives 0, which can change the charge. Wrap sums in COALESCE."
+    },
+    {
+      "type": "Edge case",
+      "question": "The query returns several columns but no quantity?",
+      "answer": "The metric gives 0 or fails. Name the numeric column quantity."
+    },
+    {
+      "type": "Edge case",
+      "question": "customer_id does not match any customer?",
+      "answer": "The usage is not attributed or billed. Check that it matches the external ID or Zenskar ID."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete a metric a price uses?",
+      "answer": "It is allowed and can affect contracts and invoices."
+    },
+    {
+      "type": "How it works",
+      "question": "Which fields must every event have?",
+      "answer": "customer_id (String) and timestamp (DateTime64), plus your own fields under data."
+    },
+    {
+      "type": "How it works",
+      "question": "How does a metric know the billing period?",
+      "answer": "SQL variables {{start_date}} and {{end_date}} are filled in for the period."
+    },
+    {
+      "type": "How it works",
+      "question": "How do I know S3 ingestion finished?",
+      "answer": "Webhooks ingestion.completed and ingestion.failed report each file."
+    }
+  ]
+}

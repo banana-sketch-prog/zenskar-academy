@@ -1,0 +1,25 @@
+# Deploys the built site to Cloudflare Pages on every merge to main.
+# Off by default: turn it on by adding the repository variable DEPLOY_ENABLED=true
+# and the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+# IMPORTANT: put the Pages project behind Cloudflare Access (company SSO) before
+# sharing the URL. A Pages site is public until you do that.
+# Using Netlify or Vercel instead? Replace the last step with their deploy action.
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  deploy:
+    if: ${{ vars.DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm run build
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=zenskar-academy

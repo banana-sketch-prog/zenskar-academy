@@ -1,0 +1,263 @@
+{
+  "key": "tax",
+  "name": "Tax",
+  "group": "Billing and money",
+  "description": "Categories, entities, engines and rates.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Categories are org-wide; rates are per entity",
+    "One engine per served country",
+    "Tax categories can be renamed but never deleted"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Categories",
+        "cards": [
+          {
+            "title": "Tax category",
+            "body": "Classifies how a product is taxed. Defined once for the organization. It can be renamed but never deleted.",
+            "example": "SaaS subscription, Professional services."
+          },
+          {
+            "title": "Third-party tax code",
+            "body": "Each category can map to one code per third-party engine. The engine receives only the code, not the category. Zenskar does not translate codes between engines.",
+            "example": "SaaS subscription maps to Avalara code SW054000."
+          }
+        ]
+      },
+      {
+        "title": "Entities and countries",
+        "cards": [
+          {
+            "title": "Business entity config",
+            "body": "Each entity has its own served countries, tax engines and rates. Rates of one entity never apply to another.",
+            "example": "US entity and German entity configured separately."
+          },
+          {
+            "title": "Served country",
+            "body": "A country where the entity bills customers, taken from the customer's billing address. It needs at least one currency and covers a contract only if the contract currency is listed.",
+            "example": "Canada with CAD and USD."
+          },
+          {
+            "title": "Tax engine",
+            "body": "The Zenskar engine or one connected third-party engine (Avalara AvaTax or Anrok) per served country. An entity connects at most one third-party engine and may mix engines across countries.",
+            "example": "Avalara for the US, Zenskar engine for India."
+          }
+        ]
+      },
+      {
+        "title": "Rates",
+        "cards": [
+          {
+            "title": "Zenskar tax engine",
+            "body": "The organization maintains rates. Rate depends on category and the customer billing address matched to jurisdictions.",
+            "example": "8% for category X in jurisdiction Y."
+          },
+          {
+            "title": "Rates over time",
+            "body": "A rate belongs to one category and one jurisdiction and changes through dated rate changes made of tax components.",
+            "example": "New rate effective Apr 1."
+          },
+          {
+            "title": "Third-party engine",
+            "body": "Zenskar sends the tax code and both addresses. The engine applies its own rates and rules and records transactions for filing.",
+            "example": "Anrok calculates for the UK."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Missing code.</b> A category without a code for a connected engine can affect contracts. Zenskar does not check the mapping when an engine is switched.",
+    "<b>Removing a country.</b> It takes effect immediately with no confirmation. Rates are kept.",
+    "<b>Disconnected engine.</b> Served countries keep it, shown as (not connected). Codes stay but are hidden.",
+    "<b>Missing rates.</b> The entity card shows N countries need rates when the Zenskar engine has none for a served country.",
+    "<b>Ambiguous rates.</b> The resolve-rate API returns 422 when several rows match, 404 when none do. Close one row or deactivate it.",
+    "<b>Exemption.</b> Customer tax exemption comes from a custom attribute you define.",
+    "<b>Two engines.</b> An organization using two third-party engines connects each to a different entity."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "",
+    "groups": [
+      {
+        "title": "Tax",
+        "items": [
+          "List, create, get and update tax category",
+          "List, create, get and update jurisdiction rate",
+          "Resolve applicable tax rate (category, destination, date)",
+          "List, get and update tax rates"
+        ]
+      },
+      {
+        "title": "Business entities",
+        "items": [
+          "Get and set business entity config",
+          "Get, upsert and delete region config"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Can you delete a tax category?",
+      "options": [
+        "Yes",
+        "No, only rename it",
+        "Only if unused"
+      ],
+      "answer": 1,
+      "explanation": "Renaming is the way to retire one."
+    },
+    {
+      "question": "What does a third-party engine receive?",
+      "options": [
+        "The tax category",
+        "The third-party tax code and both addresses",
+        "Only the customer name"
+      ],
+      "answer": 1,
+      "explanation": "The category itself is not sent."
+    },
+    {
+      "question": "How many third-party engines can one entity connect?",
+      "options": [
+        "One",
+        "Two",
+        "Unlimited"
+      ],
+      "answer": 0,
+      "explanation": "Mixing is across countries, using the Zenskar engine or the one connected engine."
+    },
+    {
+      "question": "The resolve-rate API returns 422. Why?",
+      "options": [
+        "No rate found",
+        "Several rows match",
+        "The key is invalid"
+      ],
+      "answer": 1,
+      "explanation": "404 means none match; 422 means ambiguity."
+    },
+    {
+      "question": "When does a served country cover a contract?",
+      "options": [
+        "Always",
+        "When the contract currency is on its list",
+        "When tax IDs match"
+      ],
+      "answer": 1,
+      "explanation": "Every billing currency must be listed."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Tax category vs tax code?",
+      "answer": "A category is Zenskar's classification. A tax code is the third-party engine's identifier mapped to it."
+    },
+    {
+      "type": "Difference",
+      "question": "Zenskar engine vs Avalara vs Anrok?",
+      "answer": "With the Zenskar engine your organization maintains rates. Avalara and Anrok apply their own rates and rules."
+    },
+    {
+      "type": "Difference",
+      "question": "Business entity tax config vs organization tax categories?",
+      "answer": "Categories are organization-wide; served countries, engines and rates are per entity."
+    },
+    {
+      "type": "Difference",
+      "question": "Served country vs customer country?",
+      "answer": "A served country is where the entity bills. The customer's billing address decides which applies."
+    },
+    {
+      "type": "Difference",
+      "question": "Tax rate vs rate change vs component?",
+      "answer": "A rate belongs to a category and jurisdiction, changes over time through dated rate changes, and is made of components."
+    },
+    {
+      "type": "Difference",
+      "question": "Resolve-rate 404 vs 422?",
+      "answer": "404 means no rate matches; 422 means several rows match and the configuration is ambiguous."
+    },
+    {
+      "type": "Difference",
+      "question": "Disconnected vs removed engine?",
+      "answer": "Disconnecting keeps the country mapped but marks it (not connected). Removing a served country takes effect immediately."
+    },
+    {
+      "type": "Use case",
+      "question": "Sell SaaS and services with different tax?",
+      "answer": "Create two categories and assign one per product."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill in Canada in CAD and USD?",
+      "answer": "Add Canada as a served country with both currencies."
+    },
+    {
+      "type": "Use case",
+      "question": "Use Avalara in the US and Zenskar engine in India?",
+      "answer": "Choose an engine per served country, within one third-party engine per entity."
+    },
+    {
+      "type": "Use case",
+      "question": "Tax-exempt customer?",
+      "answer": "Use a customer custom attribute."
+    },
+    {
+      "type": "Use case",
+      "question": "Check what rate applies on a date?",
+      "answer": "Call resolve applicable rate with category, destination and date."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete a tax category?",
+      "answer": "No. It can only be renamed."
+    },
+    {
+      "type": "Edge case",
+      "question": "A product category lacks a code for the engine?",
+      "answer": "Contracts can be affected, and Zenskar does not check mapping when an engine changes."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does Zenskar translate codes between engines?",
+      "answer": "No."
+    },
+    {
+      "type": "Edge case",
+      "question": "What if no rates exist for a served country?",
+      "answer": "The entity card shows N countries need rates."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can a country change after being added?",
+      "answer": "No."
+    },
+    {
+      "type": "Edge case",
+      "question": "A contract's currency is not on the country's list?",
+      "answer": "The country does not cover that contract."
+    },
+    {
+      "type": "Edge case",
+      "question": "Two third-party engines in one entity?",
+      "answer": "Not allowed. Connect each to a different entity."
+    },
+    {
+      "type": "How it works",
+      "question": "What does Avalara receive?",
+      "answer": "The third-party tax code plus both addresses, not the category."
+    }
+  ]
+}

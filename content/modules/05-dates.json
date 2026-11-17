@@ -1,0 +1,241 @@
+{
+  "key": "dates",
+  "name": "Dates",
+  "group": "Foundations",
+  "description": "Every date from contract start to revenue recognition.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Contract start and billing start can differ",
+    "Invoice date is an organization-wide rule",
+    "Period-of-time revenue is straight-line",
+    "Prepaid bills ahead, postpaid in arrears"
+  ],
+  "learn": {
+    "intro": "Seven different dates show up between signing a deal and recognizing revenue. Keep them apart.",
+    "subs": [
+      {
+        "title": "The seven dates",
+        "cards": [
+          {
+            "title": "Contract period",
+            "body": "Start date and end date of the agreed terms. Charges only exist inside this window.",
+            "example": "Jan 15, 2026 to Jan 14, 2027 (a 12-month deal)."
+          },
+          {
+            "title": "Start billing cycle on (anchor)",
+            "body": "When invoicing actually begins and which date cycles align to. Defaults to the contract start but can differ. A month-end option makes cycles end on the last day of the month.",
+            "example": "Contract starts Jan 15, billing cycle starts Feb 1. The first invoice period begins Feb 1."
+          },
+          {
+            "title": "Phase dates",
+            "body": "Each phase (active, trial or pause) has its own start and end, inside the contract boundaries. A contract needs at least one phase to activate.",
+            "example": "Trial phase Jan 15 to Feb 13, then a Standard phase from Feb 14. Invoicing starts after the trial ends."
+          },
+          {
+            "title": "Product (line item) dates",
+            "body": "A product's own start date; its billing cycle starts there unless an anchor date overrides it. Point-in-time products charge per event; period-of-time products charge per period.",
+            "example": "A seat license (period-of-time) starting Feb 1 bills monthly from Feb 1. An API call (point-in-time) is charged when the event is recorded."
+          },
+          {
+            "title": "Billing period and cadence",
+            "body": "How often you bill: monthly, quarterly or yearly (ISO 8601 durations P1M, P3M, P1Y), with an offset of prepaid (billed in advance) or postpaid (billed in arrears).",
+            "example": "P1M prepaid: the March 1 invoice covers March. P1M postpaid: the March 1 invoice covers February."
+          },
+          {
+            "title": "Invoice date",
+            "body": "By default the generation timestamp (UTC). Optionally derived from generation date, Bill For Date or service period start, then shifted by an offset and pinned to a day.",
+            "example": "Bill For Date Mar 1, offset +1 month, pinned to last day: invoice dated Apr 30."
+          },
+          {
+            "title": "Revenue recognition date",
+            "body": "Point-in-time: when the event occurs. Period-of-time: straight-line across the service period. Independent of when you invoice or get paid.",
+            "example": "A $12,000 annual subscription (period-of-time) is recognized as $1,000 per month. Each API call is recognized the day it happens."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Mental model:</b> contract dates say <i>when the deal is valid</i>, phase and product dates say <i>what applies when</i>, cadence says <i>how often to bill</i>, invoice date says <i>what the paper says</i>, rev rec date says <i>when you earned it</i>."
+  },
+  "edgeCases": [
+    "<b>Contract start ≠ billing start.</b> A contract can begin Jan 15 and start its billing cycle Feb 1. Revenue and invoices follow different clocks here.",
+    "<b>Month-end.</b> Bill For Date Mar 1 + 1 month, pinned to last day, gives Apr 30. Service period start Feb 1 pinned to last day gives Feb 28 (Feb 29 in a leap year, handled automatically).",
+    "<b>Phases must fit.</b> Phase dates must sit within the contract boundaries; a trial phase delays invoicing until it ends.",
+    "<b>Invoice date is not per contract.</b> The rule is organization-wide. One invoice can be edited manually, but only while it is DRAFT.",
+    "<b>Open-ended contracts.</b> The newer contract model currently requires an end date, while older docs describe it as optional. Check which version your tenant runs.",
+    "<b>Prepaid vs postpaid.</b> Same cadence, different timing: prepaid bills the coming period, postpaid bills the one just finished."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "contracts",
+    "groups": [
+      {
+        "title": "Operations in the reference",
+        "items": [
+          "Create contract phase",
+          "Pause, update pause and resume contract",
+          "Expire contract (expiry time set to end of day, 23:59:59.999999)",
+          "Generate an invoice for a customer and contract"
+        ]
+      }
+    ]
+  },
+  "widget": "invoice-date-calculator",
+  "quiz": [
+    {
+      "question": "A contract starts Jan 15, but \"Start billing cycle on\" is Feb 1. When does invoicing begin?",
+      "options": [
+        "Jan 15",
+        "Feb 1",
+        "On the first usage event"
+      ],
+      "answer": 1,
+      "explanation": "The billing cycle start (anchor) is the date invoicing actually begins and can differ from the contract start."
+    },
+    {
+      "question": "With Invoice Date Configuration off, what date prints on an invoice?",
+      "options": [
+        "Bill For Date",
+        "Service period start",
+        "Invoice generation timestamp (UTC)"
+      ],
+      "answer": 2,
+      "explanation": "The default is the moment Zenskar generated the invoice."
+    },
+    {
+      "question": "How is revenue recognized for a period-of-time product?",
+      "options": [
+        "At the moment of each event",
+        "Straight-line across the service period",
+        "When payment is received"
+      ],
+      "answer": 1,
+      "explanation": "Point-in-time is recognized when the event occurs; period-of-time is recognized uniformly across the period."
+    },
+    {
+      "question": "When can you manually edit a single invoice's date?",
+      "options": [
+        "Any time",
+        "Only while the invoice is DRAFT",
+        "Only after payment"
+      ],
+      "answer": 1,
+      "explanation": "Manual date edits are limited to draft invoices and affect only that invoice."
+    },
+    {
+      "question": "Which are the phase types on a contract?",
+      "options": [
+        "Active, trial, pause",
+        "Draft, active, expired",
+        "Prepaid, postpaid, hybrid"
+      ],
+      "answer": 0,
+      "explanation": "Draft/active/expired are contract statuses, not phase types."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Contract start vs billing anchor?",
+      "answer": "The contract start is when the agreement begins. The anchor (start billing cycle on) is when invoicing begins and where cycles align."
+    },
+    {
+      "type": "Difference",
+      "question": "Invoice date vs due date?",
+      "answer": "The invoice date is what the document says. The due date comes from payment terms, such as Net 30."
+    },
+    {
+      "type": "Difference",
+      "question": "Prepaid vs postpaid?",
+      "answer": "Prepaid bills the coming period; postpaid bills the period just finished."
+    },
+    {
+      "type": "Difference",
+      "question": "Point-in-time vs period-of-time revenue?",
+      "answer": "Point-in-time is recognized when the event occurs. Period-of-time is recognized straight-line over the service period."
+    },
+    {
+      "type": "Difference",
+      "question": "Billing period vs service period?",
+      "answer": "The billing period is what an invoice covers. The service period is when the service is delivered; with postpaid billing they coincide."
+    },
+    {
+      "type": "Difference",
+      "question": "P1M vs P3M vs P1Y?",
+      "answer": "ISO 8601 durations for monthly, quarterly and yearly cadence."
+    },
+    {
+      "type": "Difference",
+      "question": "Generation date vs Bill For Date?",
+      "answer": "Generation date is when Zenskar created the invoice. Bill For Date is the period date used by the invoice date rule."
+    },
+    {
+      "type": "Difference",
+      "question": "Phase dates vs contract dates?",
+      "answer": "Phase dates sit inside contract dates and define when terms apply."
+    },
+    {
+      "type": "Difference",
+      "question": "Revenue recognition date vs invoice date?",
+      "answer": "They are independent. Revenue follows performance, invoices follow billing."
+    },
+    {
+      "type": "Difference",
+      "question": "Same-day vs last-day pinning?",
+      "answer": "Same day keeps the day number (clamped to month length). Last day always lands on the month's last day."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill on the last day of every month?",
+      "answer": "Set the last-day-of-month option on the contract."
+    },
+    {
+      "type": "Use case",
+      "question": "Align many contracts to one billing date?",
+      "answer": "Use the same anchor date."
+    },
+    {
+      "type": "Use case",
+      "question": "Quarterly in arrears with Net 30?",
+      "answer": "Cadence P3M with postpaid offset, and Net 30 payment terms."
+    },
+    {
+      "type": "Use case",
+      "question": "Annual prepaid but monthly revenue?",
+      "answer": "Bill yearly; period-of-time recognition spreads revenue across the months."
+    },
+    {
+      "type": "Edge case",
+      "question": "What happens in February and leap years?",
+      "answer": "Month-end handling adjusts automatically, so Feb 28 or 29 is used."
+    },
+    {
+      "type": "Edge case",
+      "question": "Anchor on the 31st?",
+      "answer": "Months with fewer days are clamped to their last day."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I edit an invoice's date?",
+      "answer": "Only on a draft invoice, and it affects only that invoice."
+    },
+    {
+      "type": "Edge case",
+      "question": "What time zone is the default invoice date?",
+      "answer": "UTC generation timestamp."
+    },
+    {
+      "type": "How it works",
+      "question": "How does Invoice Date Configuration work?",
+      "answer": "Three steps: pick a reference date, apply an offset, then pin to a day. It is an organization-wide setting."
+    },
+    {
+      "type": "How it works",
+      "question": "How does pause affect dates?",
+      "answer": "A pause has a start, an optional resume date and an unpause extension policy. See the API reference for the policy options."
+    }
+  ]
+}

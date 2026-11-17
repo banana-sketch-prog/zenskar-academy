@@ -1,0 +1,245 @@
+{
+  "key": "integ",
+  "name": "Integrations",
+  "group": "Platform",
+  "description": "Data, ERP, CRM, tax and payment connectors.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Connectors for data, ERP, CRM, tax and payments",
+    "Synced sources copy; remote sources query in place",
+    "Each Stripe account connects once"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Data sources",
+        "cards": [
+          {
+            "title": "Connectors",
+            "body": "Snowflake, BigQuery, PostgreSQL, MySQL, MongoDB, Amazon Redshift, Athena, Databricks, ClickHouse, CockroachDB, Google Sheets, Auth0, Looker, Metabase, Shopify and QuickBooks.",
+            "example": "Snowflake holds your api_calls table."
+          },
+          {
+            "title": "Sync model",
+            "body": "Synced sources are copied on a schedule using cursor columns. Remote sources are queried in place, for example Redshift from a metric's SQL builder.",
+            "example": "Sync hourly, or query live."
+          }
+        ]
+      },
+      {
+        "title": "Business systems",
+        "cards": [
+          {
+            "title": "ERPs",
+            "body": "NetSuite, QuickBooks, Xero, Zoho Books and Rillet. Xero and QuickBooks receive the tax of invoices as determined by tax configuration.",
+            "example": "Invoices flow to Xero with tax."
+          },
+          {
+            "title": "CRM and CPQ",
+            "body": "HubSpot and Salesforce. Salesforce uses an installable package with a default Flow, or your own Flow, plus object mapping.",
+            "example": "Closed-won deal creates a contract."
+          },
+          {
+            "title": "Tax and payments",
+            "body": "Avalara AvaTax and Anrok for tax; Stripe for payments.",
+            "example": "Stripe charges the invoice, Avalara taxes it."
+          },
+          {
+            "title": "Model Context Protocol",
+            "body": "Zenskar publishes an MCP server so AI assistants can work with Zenskar data.",
+            "example": "Ask an assistant to list tax categories."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Stripe.</b> Not compatible with Managed Payments; each account connects once; match test and live mode to sandbox and production.",
+    "<b>Athena.</b> Needs an AWS account, S3 bucket, Lake Formation database and credentials.",
+    "<b>BigQuery.</b> May need fully qualified table names in queries.",
+    "<b>One tax engine.</b> At most one third-party engine per business entity.",
+    "<b>Entity binding.</b> A Stripe connection's entity cannot be changed after saving."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "",
+    "groups": [
+      {
+        "title": "Data sources",
+        "items": [
+          "List, create, get and update data-source connector"
+        ]
+      },
+      {
+        "title": "Customer connectors",
+        "items": [
+          "Get customer connector details",
+          "Patch customer connector ID",
+          "Delete third-party connector"
+        ]
+      },
+      {
+        "title": "Jobs",
+        "items": [
+          "List jobs, get job and outcomes"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which source type is queried in place?",
+      "options": [
+        "Synced",
+        "Remote",
+        "CSV"
+      ],
+      "answer": 1,
+      "explanation": "Remote sources are not copied."
+    },
+    {
+      "question": "How many third-party tax engines per entity?",
+      "options": [
+        "One",
+        "Three",
+        "None"
+      ],
+      "answer": 0,
+      "explanation": "Connect each additional engine to a different entity."
+    },
+    {
+      "question": "Which ERPs does Zenskar list?",
+      "options": [
+        "NetSuite, QuickBooks, Xero, Zoho Books, Rillet",
+        "Only NetSuite",
+        "SAP only"
+      ],
+      "answer": 0,
+      "explanation": "These are documented ERP integrations."
+    },
+    {
+      "question": "Can a Stripe account be linked twice?",
+      "options": [
+        "Yes",
+        "No",
+        "Only for sandbox"
+      ],
+      "answer": 1,
+      "explanation": "Each Stripe account connects once."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Synced vs remote data source?",
+      "answer": "Synced copies data on a schedule; remote queries in place."
+    },
+    {
+      "type": "Difference",
+      "question": "Data source vs ERP vs CRM?",
+      "answer": "Data sources feed usage in, ERPs receive accounting data, CRMs feed deals and customers."
+    },
+    {
+      "type": "Difference",
+      "question": "Avalara vs Anrok?",
+      "answer": "Both are third-party tax engines. An entity connects only one."
+    },
+    {
+      "type": "Difference",
+      "question": "Stripe vs other gateways?",
+      "answer": "Stripe is the payment gateway with documented sync rules."
+    },
+    {
+      "type": "Difference",
+      "question": "Zenskar tax engine vs third-party engine?",
+      "answer": "You maintain rates in the first; the engine does in the second."
+    },
+    {
+      "type": "Difference",
+      "question": "HubSpot vs Salesforce?",
+      "answer": "Both are CRM integrations. Salesforce uses an installable package with a default Flow or your own Flow."
+    },
+    {
+      "type": "Difference",
+      "question": "Import vs export sync?",
+      "answer": "Import reads from the external system; export pushes to it."
+    },
+    {
+      "type": "Difference",
+      "question": "Webhook vs integration?",
+      "answer": "A webhook pushes events to your endpoint. An integration connects a named product."
+    },
+    {
+      "type": "Use case",
+      "question": "Usage lives in a warehouse?",
+      "answer": "Connect Snowflake, BigQuery, Redshift or Postgres."
+    },
+    {
+      "type": "Use case",
+      "question": "Send invoices to accounting?",
+      "answer": "Connect the ERP (NetSuite, QuickBooks, Xero, Zoho Books or Rillet)."
+    },
+    {
+      "type": "Use case",
+      "question": "Create contracts from closed deals?",
+      "answer": "Use the CRM integration."
+    },
+    {
+      "type": "Use case",
+      "question": "Let an AI assistant work with Zenskar?",
+      "answer": "Use the MCP server."
+    },
+    {
+      "type": "Use case",
+      "question": "Keep a huge table without copying it?",
+      "answer": "Use a remote source."
+    },
+    {
+      "type": "Edge case",
+      "question": "Stripe sandbox and live?",
+      "answer": "Match test mode to sandbox and live mode to production."
+    },
+    {
+      "type": "Edge case",
+      "question": "Athena setup?",
+      "answer": "Needs an AWS account, S3 bucket, Lake Formation database and credentials."
+    },
+    {
+      "type": "Edge case",
+      "question": "BigQuery queries failing?",
+      "answer": "Use fully qualified table names."
+    },
+    {
+      "type": "Edge case",
+      "question": "Same Stripe account twice?",
+      "answer": "Not allowed."
+    },
+    {
+      "type": "Edge case",
+      "question": "Pre-existing customers to Stripe?",
+      "answer": "Bulk CSV import with reference_id."
+    },
+    {
+      "type": "Edge case",
+      "question": "Entity changed after connecting?",
+      "answer": "Cannot be changed."
+    },
+    {
+      "type": "How it works",
+      "question": "What controls sync freshness?",
+      "answer": "Sync frequency and cursor columns on a synced source."
+    },
+    {
+      "type": "How it works",
+      "question": "Do ERPs receive tax?",
+      "answer": "Xero and QuickBooks receive the tax determined by tax configuration."
+    }
+  ]
+}

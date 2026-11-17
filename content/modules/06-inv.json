@@ -1,0 +1,287 @@
+{
+  "key": "inv",
+  "name": "Invoices",
+  "group": "Billing and money",
+  "description": "Preview, regenerate, approve and correct invoices.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Preview before you publish",
+    "Saving an active contract regenerates draft and upcoming invoices",
+    "Approval can be blocked by a tax change"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Lifecycle",
+        "cards": [
+          {
+            "title": "Draft to approved",
+            "body": "Invoices start as drafts. Approving one makes it outstanding; it then becomes partially paid, paid, or overdue. The invoice list has tabs for All, Draft, Outstanding and Overdue.",
+            "example": "An invoice due Mar 31 turns Overdue on Apr 1 if unpaid."
+          },
+          {
+            "title": "Approval and tax check",
+            "body": "On V3 approval Zenskar re-verifies tax. A material tax change beyond the organization policy keeps the invoice in draft and returns 409.",
+            "example": "Tax rate changed overnight, so approval is held."
+          },
+          {
+            "title": "Bulk actions",
+            "body": "Select invoices in the list to approve, or approve and charge, as a background job.",
+            "example": "Approve and charge all April drafts."
+          }
+        ]
+      },
+      {
+        "title": "From a contract",
+        "cards": [
+          {
+            "title": "Invoice Preview",
+            "body": "On the contract Summary tab, switch on Invoice Preview to see the invoices the current settings would produce. It needs a customer, currency, duration and at least one line item.",
+            "example": "Change a price and watch next month's invoice update."
+          },
+          {
+            "title": "Invoices tab",
+            "body": "Only an active contract has one. It lists each invoice with billing period, status, total and amount due.",
+            "example": "12 monthly invoices of a yearly contract."
+          },
+          {
+            "title": "Regenerate invoices",
+            "body": "Recalculates draft and upcoming invoices. Saving an active contract starts it automatically; you can also start it after a failed run.",
+            "example": "Amend a price, save, and upcoming invoices update."
+          }
+        ]
+      },
+      {
+        "title": "Dates and corrections",
+        "cards": [
+          {
+            "title": "Invoice date",
+            "body": "Set by the organization-wide invoice date rule. A single draft invoice can be edited manually. See the Dates module.",
+            "example": "Bill For Date Mar 1, +1 month, last day: Apr 30."
+          },
+          {
+            "title": "Credit notes",
+            "body": "A credit note is created against an invoice and has its own line items. Credit notes created in Stripe are imported but Zenskar does not push them.",
+            "example": "Credit $100 on an invoice for a service outage."
+          },
+          {
+            "title": "Void",
+            "body": "An invoice can be voided through the API or product.",
+            "example": "Void a duplicate invoice."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Invoices tab.</b> Only an active contract has one.",
+    "<b>One run at a time.</b> Only one regeneration runs per contract; a second request follows the run in progress.",
+    "<b>Scope of regeneration.</b> It recalculates draft and upcoming invoices.",
+    "<b>Permissions.</b> Preview needs Can Read Contract and Can Read Invoice; regeneration needs Can Update Contract.",
+    "<b>Held approval.</b> A material tax change beyond policy leaves the invoice in draft with a 409.",
+    "<b>Imported invoices.</b> Invoices imported from an external system cannot be charged from Zenskar.",
+    "<b>Draft only.</b> Manual invoice date edits apply to draft invoices."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "inv",
+    "groups": [
+      {
+        "title": "Invoices",
+        "items": [
+          "List invoices",
+          "Get invoice, get invoice by external ID",
+          "Generate an invoice (customer and contract)",
+          "Approve invoice, approve V3 invoice",
+          "Get invoice line items",
+          "Void invoice",
+          "Create credit note against invoice"
+        ]
+      },
+      {
+        "title": "Credit notes",
+        "items": [
+          "List, create, get and update credit note",
+          "Get line items by credit note ID"
+        ]
+      },
+      {
+        "title": "Jobs",
+        "items": [
+          "List jobs, get job, get job outcomes, get job with sub-jobs"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "What must a contract have before Invoice Preview works?",
+      "options": [
+        "Only a customer",
+        "Customer, currency, duration and at least one line item",
+        "An approved invoice"
+      ],
+      "answer": 1,
+      "explanation": "Those four are the documented prerequisites."
+    },
+    {
+      "question": "What does saving an active contract trigger?",
+      "options": [
+        "Nothing",
+        "Invoice regeneration for draft and upcoming invoices",
+        "Deletion of paid invoices"
+      ],
+      "answer": 1,
+      "explanation": "Regeneration starts automatically."
+    },
+    {
+      "question": "Two regeneration requests arrive together. What happens?",
+      "options": [
+        "Both run",
+        "The second follows the run in progress",
+        "The first is cancelled"
+      ],
+      "answer": 1,
+      "explanation": "Only one regeneration runs for a contract at a time."
+    },
+    {
+      "question": "At V3 approval, a material tax change exceeds policy. Result?",
+      "options": [
+        "Invoice approved anyway",
+        "Invoice stays in draft (409)",
+        "Invoice voided"
+      ],
+      "answer": 1,
+      "explanation": "The approval-time tax check holds it."
+    },
+    {
+      "question": "Which invoices can Charge Invoice apply to?",
+      "options": [
+        "Draft only",
+        "Approved or partially paid, not imported ones",
+        "Any invoice"
+      ],
+      "answer": 1,
+      "explanation": "Imported invoices cannot be charged from Zenskar."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Draft vs approved invoice?",
+      "answer": "Draft can be edited and regenerated. Approving makes it outstanding."
+    },
+    {
+      "type": "Difference",
+      "question": "Preview vs generate vs regenerate?",
+      "answer": "Preview shows what a contract would produce. Generate creates an invoice for a customer, contract and date range. Regenerate recalculates draft and upcoming invoices."
+    },
+    {
+      "type": "Difference",
+      "question": "Approve vs approve V3?",
+      "answer": "V3 approval re-verifies tax, and a material change beyond policy keeps the invoice in draft with a 409."
+    },
+    {
+      "type": "Difference",
+      "question": "Charge Invoice vs payment link?",
+      "answer": "Charge collects using a saved payment method. A link lets the customer pay online, optionally in part."
+    },
+    {
+      "type": "Difference",
+      "question": "Credit note vs void?",
+      "answer": "A credit note offsets an invoice amount. Void cancels the invoice. Use the credit note when the invoice should stand."
+    },
+    {
+      "type": "Difference",
+      "question": "Native vs imported invoices?",
+      "answer": "Imported invoices come from an external system and cannot be charged from Zenskar."
+    },
+    {
+      "type": "Difference",
+      "question": "Consolidated invoice vs parent and child billing?",
+      "answer": "Consolidation merges existing invoices into one document; parent and child routes billing to the parent."
+    },
+    {
+      "type": "Difference",
+      "question": "Invoice date vs due date?",
+      "answer": "Invoice date comes from the date rule; due date from payment terms."
+    },
+    {
+      "type": "Use case",
+      "question": "Price was wrong mid-cycle?",
+      "answer": "Amend the contract and let draft and upcoming invoices regenerate."
+    },
+    {
+      "type": "Use case",
+      "question": "Approve all drafts at month end?",
+      "answer": "Select them in the list and approve, or approve and charge, as a bulk job."
+    },
+    {
+      "type": "Use case",
+      "question": "Compensate a service outage?",
+      "answer": "Create a credit note against the invoice."
+    },
+    {
+      "type": "Use case",
+      "question": "See next quarter's invoices before signing?",
+      "answer": "Turn on Invoice Preview on the contract."
+    },
+    {
+      "type": "Use case",
+      "question": "Avoid duplicate invoices for a period?",
+      "answer": "Set check_duplicate_invoice when generating or approving."
+    },
+    {
+      "type": "Use case",
+      "question": "Approve without emailing the customer?",
+      "answer": "Pass send_email=false on approve."
+    },
+    {
+      "type": "Edge case",
+      "question": "Why is there no Invoices tab?",
+      "answer": "Only active contracts have one."
+    },
+    {
+      "type": "Edge case",
+      "question": "Two regenerations started together?",
+      "answer": "Only one runs at a time; the second follows the run in progress."
+    },
+    {
+      "type": "Edge case",
+      "question": "Are approved invoices recalculated?",
+      "answer": "Regeneration recalculates draft and upcoming invoices."
+    },
+    {
+      "type": "Edge case",
+      "question": "Why does preview return nothing?",
+      "answer": "It needs a customer, currency, duration and at least one line item, and the Can Read Contract and Can Read Invoice permissions."
+    },
+    {
+      "type": "Edge case",
+      "question": "Tax changed overnight?",
+      "answer": "On V3 approval a material change beyond policy leaves the invoice in draft (409)."
+    },
+    {
+      "type": "How it works",
+      "question": "What does generate_invoice need?",
+      "answer": "customer_id, contract_id, from_date and to_date; optionally check_duplicate_invoice and bill_for_date."
+    },
+    {
+      "type": "How it works",
+      "question": "What tabs does the invoice list have?",
+      "answer": "All, Draft, Outstanding and Overdue."
+    },
+    {
+      "type": "How it works",
+      "question": "How are payments linked to invoices?",
+      "answer": "A payment lists the invoices it applies to and the amount per invoice."
+    }
+  ]
+}

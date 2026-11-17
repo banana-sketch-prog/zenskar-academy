@@ -1,0 +1,262 @@
+{
+  "key": "contracts",
+  "name": "Plans and contracts",
+  "group": "Foundations",
+  "description": "Contracts, phases, plans and amendments.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "The contract is the source of truth",
+    "Phases split time; line items hold products",
+    "Amendments apply from an effective date"
+  ],
+  "learn": {
+    "intro": "A contract is the source of truth for a customer billing relationship. Once it is live, Zenskar runs two workflows from it at the same time: billing (invoices, payments) and revenue recognition.",
+    "subs": [
+      {
+        "title": "Core concepts",
+        "cards": [
+          {
+            "title": "Contract",
+            "body": "Holds the customer, business entity, currency, start date and line items.",
+            "example": "Acme Inc, USD, starting Jan 15, with two products."
+          },
+          {
+            "title": "Line item",
+            "body": "Each product added to a contract. Either point-in-time or period-of-time.",
+            "example": "A seat license (period) and API calls (point)."
+          },
+          {
+            "title": "Phase",
+            "body": "A time-based segment with its own dates and terms. Types: active, trial, pause.",
+            "example": "A 30-day trial, then a Standard phase. Invoicing starts after the trial."
+          },
+          {
+            "title": "Plan",
+            "body": "A reusable pattern of products and features. Contracts built from it inherit them.",
+            "example": "A \"Growth\" plan used as the base for 20 customer contracts."
+          },
+          {
+            "title": "Amendment",
+            "body": "A change applied from an effective date. Zenskar reshapes affected invoices without manual credit notes.",
+            "example": "A price change effective Jun 1 only affects invoices from Jun 1."
+          },
+          {
+            "title": "Status",
+            "body": "A contract is drafted first and billing starts once it is active. It ends as expired.",
+            "example": "Stay in draft while terms are reviewed, then activate."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Customer is fixed.</b> The customer on a contract cannot be changed after creation.",
+    "<b>End date.</b> The newer contract model currently requires an end date, so open-ended contracts are not supported yet. Older docs describe it as optional.",
+    "<b>Concurrent edits.</b> If two people save at once, the second save is rejected with a conflict error.",
+    "<b>Line-item level only.</b> In the newer model, discounts and minimum commitments work per line item, not at contract level.",
+    "<b>No change log.</b> A readable amendment history does not exist yet beyond the contract version number.",
+    "<b>Retroactive changes.</b> Only one rule for how retroactive billing changes affect invoices can be active on a contract.",
+    "<b>At least one phase.</b> A contract needs a phase before it can be activated, and phases must sit inside the contract dates."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "contracts",
+    "groups": [
+      {
+        "title": "Operations in the reference",
+        "items": [
+          "Contracts: list, create, get by ID, update, delete (must not be active)",
+          "Get contract amendments",
+          "Create contract phase and phase pricing",
+          "Pause, update pause, resume, expire contract",
+          "Plans: list, create, get, update, delete; phases and phase pricing; create new version"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "What is the source of truth for a customer billing relationship in Zenskar?",
+      "options": [
+        "The invoice",
+        "The contract",
+        "The product"
+      ],
+      "answer": 1,
+      "explanation": "The contract holds the customer, currency, dates and line items that drive billing and revenue recognition."
+    },
+    {
+      "question": "You need to move a contract to a different customer. What happens?",
+      "options": [
+        "Edit the customer field",
+        "The customer cannot be changed after creation",
+        "Zenskar clones it automatically"
+      ],
+      "answer": 1,
+      "explanation": "The customer on a contract cannot be changed after the contract is created."
+    },
+    {
+      "question": "Two teammates save the same contract at the same time. What happens?",
+      "options": [
+        "Last save wins",
+        "Changes are merged",
+        "The second save is rejected with a conflict error"
+      ],
+      "answer": 2,
+      "explanation": "This prevents one save from silently overwriting the other."
+    },
+    {
+      "question": "A contract is created from a plan. What does it inherit?",
+      "options": [
+        "Only the pricing",
+        "All products and features of the plan",
+        "Nothing, plans are documentation"
+      ],
+      "answer": 1,
+      "explanation": "A plan is a reusable pattern; a contract based on it inherits its products and features."
+    },
+    {
+      "question": "What does an amendment with an effective date do?",
+      "options": [
+        "Applies from that date forward and reshapes affected invoices",
+        "Rewrites all past invoices",
+        "Creates a new customer"
+      ],
+      "answer": 0,
+      "explanation": "Zenskar reshapes the affected invoices without manual credit notes or reconciliation."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Contract vs plan?",
+      "answer": "A plan is a reusable template. A contract is customer-specific and drives billing. A contract created from a plan inherits its products and features."
+    },
+    {
+      "type": "Difference",
+      "question": "Phase vs line item?",
+      "answer": "A phase is a time segment with its own dates and terms. A line item is a product on the contract."
+    },
+    {
+      "type": "Difference",
+      "question": "Draft vs active contract?",
+      "answer": "Draft has not started billing and can be edited or deleted freely. Active is live and generating invoices."
+    },
+    {
+      "type": "Difference",
+      "question": "Pause vs expire?",
+      "answer": "Pause suspends a contract and can be resumed. Expire ends it; expired is final."
+    },
+    {
+      "type": "Difference",
+      "question": "Trial vs active phase?",
+      "answer": "A trial phase delays invoicing until it ends. An active phase bills normally."
+    },
+    {
+      "type": "Difference",
+      "question": "Amendment vs new contract?",
+      "answer": "An amendment changes the existing contract from an effective date and reshapes affected invoices. A new contract is a separate agreement."
+    },
+    {
+      "type": "Difference",
+      "question": "Contract-level vs line-item-level discounts?",
+      "answer": "In the newer model discounts and minimum commitments work per line item only. Contract-level discounts are listed as not yet available."
+    },
+    {
+      "type": "Difference",
+      "question": "Contract start date vs anchor date?",
+      "answer": "Start date is when billing begins. Anchor date aligns billing cycles regardless of start."
+    },
+    {
+      "type": "Use case",
+      "question": "30-day trial then paid?",
+      "answer": "A trial phase followed by an active phase on the same contract."
+    },
+    {
+      "type": "Use case",
+      "question": "Ramp pricing in year one?",
+      "answer": "Use phases: one per stage with its own pricing."
+    },
+    {
+      "type": "Use case",
+      "question": "Seasonal customer wants to pause?",
+      "answer": "Pause with a start date and optionally a resume date."
+    },
+    {
+      "type": "Use case",
+      "question": "Customer upgrades mid-year?",
+      "answer": "Amend the contract with an effective date for the new terms."
+    },
+    {
+      "type": "Use case",
+      "question": "Standard offerings for many customers?",
+      "answer": "Create a plan and base contracts on it."
+    },
+    {
+      "type": "Use case",
+      "question": "A subsidiary uses the service but another entity pays?",
+      "answer": "Set the invoice payer customer on the contract, or bill the parent customer."
+    },
+    {
+      "type": "Use case",
+      "question": "Bill all contracts on the same day?",
+      "answer": "Set the same anchor date, or use last day of month."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I change a contract's customer?",
+      "answer": "No. It cannot be changed after creation."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does a contract need an end date?",
+      "answer": "The newer model requires one; older docs describe it as optional."
+    },
+    {
+      "type": "Edge case",
+      "question": "Two people edit at once?",
+      "answer": "The second save is rejected with a conflict error; reload and reapply."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete an active contract?",
+      "answer": "Only draft contracts can be deleted. Expire an active one."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can phases overlap or fall outside the contract?",
+      "answer": "No. Phases must not overlap and must sit within contract dates."
+    },
+    {
+      "type": "Edge case",
+      "question": "Which status changes are allowed?",
+      "answer": "Draft to active, active to expired, paused to active or expired. Expired and disputed are final."
+    },
+    {
+      "type": "Edge case",
+      "question": "What time does expiry happen?",
+      "answer": "End of the given day (23:59:59.999999). The date defaults to today."
+    },
+    {
+      "type": "How it works",
+      "question": "What can I set as status when creating a contract?",
+      "answer": "Only draft or active. Pausing and expiring use their own actions."
+    },
+    {
+      "type": "How it works",
+      "question": "Can AI create a contract?",
+      "answer": "The docs describe a flow that extracts contract terms from a raw document."
+    },
+    {
+      "type": "How it works",
+      "question": "Which renewal policies exist?",
+      "answer": "The API lists renew_with_default_contract, renew_with_existing and do_not_renew, but currently only do_not_renew is supported."
+    }
+  ]
+}

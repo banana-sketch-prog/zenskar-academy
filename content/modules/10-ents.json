@@ -1,0 +1,250 @@
+{
+  "key": "ents",
+  "name": "Features and entitlements",
+  "group": "Platform",
+  "description": "Commercial settings versus access rights.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Features change billing; entitlements control access",
+    "Entitlements are not cash",
+    "Quantity and Credits are creatable; Feature is automatic"
+  ],
+  "learn": {
+    "intro": "The word \"feature\" means two things here. <b>Contract features</b> change how a product is billed. <b>Entitlements</b> control what a customer may use.",
+    "subs": [
+      {
+        "title": "Contract features",
+        "cards": [
+          {
+            "title": "Payment terms",
+            "body": "Defines how the invoice due date is calculated.",
+            "example": "Net 30 on an invoice dated Mar 1 is due Mar 31."
+          },
+          {
+            "title": "Discount",
+            "body": "Applies to a specific product within a particular phase.",
+            "example": "10% off the API product in the second phase only."
+          },
+          {
+            "title": "Commitment",
+            "body": "The minimum and maximum financial obligation a customer agrees to over the contract.",
+            "example": "A $60,000 minimum over a 12-month contract."
+          },
+          {
+            "title": "Service fee",
+            "body": "An additional charge on top of standard product pricing.",
+            "example": "A 2% platform fee added on top of product charges (illustrative)."
+          },
+          {
+            "title": "Tax",
+            "body": "Tax rules, for example through Avalara, configured on the phase.",
+            "example": "Apply Avalara tax calculation to the Standard phase."
+          }
+        ]
+      },
+      {
+        "title": "Entitlements",
+        "cards": [
+          {
+            "title": "Quantity",
+            "body": "Controls <i>how much</i> can be consumed.",
+            "example": "10,000 API calls granted; each call subtracts from the balance."
+          },
+          {
+            "title": "Credit",
+            "body": "Controls <i>how much value</i> can be consumed, without being real currency.",
+            "example": "500 credits; a premium report uses 20."
+          },
+          {
+            "title": "Feature",
+            "body": "Controls <i>whether</i> a capability is available at all.",
+            "example": "SSO on or off. Created automatically for boolean products."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Not cash.</b> Entitlements are usage-rights bookkeeping and sit off the balance sheet. They are independent of how revenue is billed or recognized. On a customer, open the Entitlements tab to see grants and each grant's consumption log."
+  },
+  "edgeCases": [
+    "<b>Cash refunds.</b> Refunding cash against an entitlement can create accounting discrepancies, because Zenskar does not reconcile entitlements with financial transactions.",
+    "<b>Entitlements you did not create.</b> For certain simple products Zenskar creates a matching entitlement automatically when the product is created.",
+    "<b>Feature entitlements.</b> You cannot create one from the Entitlements page today; only Quantity and Credits.",
+    "<b>Validity.</b> Free units and other entitlements inherit their validity from the pricing model or contract phase, so they end when the phase ends.",
+    "<b>Missing sidebar item.</b> The Entitlements module and Free Units are tied to the earlier contract experience. If the sidebar item is missing, check which experience the organization uses.",
+    "<b>App only.</b> Entitlements, free units and customer grants are configured through the app, not the API."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "ents",
+    "groups": [
+      {
+        "title": "Operations in the reference",
+        "items": [
+          "Entitlements: list, create, get, update, delete",
+          "Customer entitlements: create, list, get, update, delete",
+          "List customer entitlement balances (filter, sort, paginate)",
+          "Get total customer entitlements"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which contract feature controls how an invoice due date is calculated?",
+      "options": [
+        "Payment terms",
+        "Commitment",
+        "Service fee"
+      ],
+      "answer": 0,
+      "explanation": "Payment terms define when payment is due after an invoice is issued."
+    },
+    {
+      "question": "\"Customers on the Enterprise plan get SSO; others do not.\" Which entitlement type is this?",
+      "options": [
+        "Quantity",
+        "Credit",
+        "Feature"
+      ],
+      "answer": 2,
+      "explanation": "Feature entitlements control whether a capability is available at all."
+    },
+    {
+      "question": "A customer is granted 500 credits. What are they?",
+      "options": [
+        "Real currency",
+        "Usage-rights bookkeeping, not cash",
+        "A tax adjustment"
+      ],
+      "answer": 1,
+      "explanation": "Credit entitlements track how much value can be consumed without representing real currency."
+    },
+    {
+      "question": "What is the risk of issuing a cash refund against an entitlement?",
+      "options": [
+        "The grant is duplicated",
+        "Accounting discrepancies, since entitlements are off-balance-sheet",
+        "The contract expires"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar does not reconcile entitlements with financial transactions."
+    },
+    {
+      "question": "Which entitlement types can you create from the Entitlements page?",
+      "options": [
+        "Quantity and Credits",
+        "Feature and Credits",
+        "All three"
+      ],
+      "answer": 0,
+      "explanation": "Feature entitlements exist under the hood (for example for boolean products) but have no creation flow today."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Contract feature vs feature entitlement?",
+      "answer": "A contract feature is a commercial setting (discount, tax, payment terms). A feature entitlement is an access switch."
+    },
+    {
+      "type": "Difference",
+      "question": "Quantity vs credit vs feature entitlement?",
+      "answer": "How much can be consumed, how much value can be consumed, and whether a capability is available."
+    },
+    {
+      "type": "Difference",
+      "question": "Entitlement vs product?",
+      "answer": "A product is what you bill. An entitlement is the right to use something, possibly linked to a product."
+    },
+    {
+      "type": "Difference",
+      "question": "Commitment vs entitlement?",
+      "answer": "Commitment is a financial minimum or maximum. An entitlement is a usage right."
+    },
+    {
+      "type": "Difference",
+      "question": "Discount vs service fee?",
+      "answer": "A discount reduces a product's charge in a phase. A service fee adds a charge on top."
+    },
+    {
+      "type": "Difference",
+      "question": "Grant vs balance?",
+      "answer": "A grant is what was given to a customer. The balance is what remains after consumption."
+    },
+    {
+      "type": "Difference",
+      "question": "Free units vs entitlements?",
+      "answer": "Both are tied to the earlier contract experience. Free units are included usage on a product; entitlements record usage rights per customer. Confirm details with an SME."
+    },
+    {
+      "type": "Difference",
+      "question": "Payment terms vs invoice date?",
+      "answer": "Payment terms set the due date. The invoice date comes from the date rule."
+    },
+    {
+      "type": "Use case",
+      "question": "Include 10,000 API calls per month?",
+      "answer": "A quantity entitlement granted to the customer."
+    },
+    {
+      "type": "Use case",
+      "question": "Promotional credits?",
+      "answer": "A credit entitlement."
+    },
+    {
+      "type": "Use case",
+      "question": "SSO only for enterprise?",
+      "answer": "A feature entitlement."
+    },
+    {
+      "type": "Use case",
+      "question": "Discount in the second phase only?",
+      "answer": "A discount feature on that product in that phase."
+    },
+    {
+      "type": "Use case",
+      "question": "Guarantee a minimum spend?",
+      "answer": "A commitment feature over the contract duration."
+    },
+    {
+      "type": "Edge case",
+      "question": "Cash refunds for an entitlement?",
+      "answer": "Can create accounting discrepancies because entitlements are off-balance-sheet."
+    },
+    {
+      "type": "Edge case",
+      "question": "Entitlement appeared without you creating it?",
+      "answer": "Zenskar creates one automatically for certain simple products."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I create a feature entitlement on the Entitlements page?",
+      "answer": "No, only quantity and credits."
+    },
+    {
+      "type": "Edge case",
+      "question": "When does an entitlement expire?",
+      "answer": "Its validity follows the pricing model or contract phase, and a grant can carry an expiry."
+    },
+    {
+      "type": "Edge case",
+      "question": "Entitlements missing from the sidebar?",
+      "answer": "They belong to the earlier contract experience."
+    },
+    {
+      "type": "How it works",
+      "question": "Where do I see usage of a grant?",
+      "answer": "Customer, Entitlements tab, then open the grant's consumption log."
+    },
+    {
+      "type": "How it works",
+      "question": "Do entitlements affect revenue recognition?",
+      "answer": "No."
+    }
+  ]
+}

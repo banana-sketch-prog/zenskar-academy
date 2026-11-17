@@ -1,0 +1,292 @@
+{
+  "key": "cust",
+  "name": "Customers",
+  "group": "Foundations",
+  "description": "Records, entities, wallets, parent and child billing.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Name is the only required field",
+    "Business entity is fixed after creation",
+    "Child invoices go to the parent, not merged"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Customer record",
+        "cards": [
+          {
+            "title": "Core fields",
+            "body": "Name is the only required field. External ID and email must each be unique in the organization, so they work as lookup keys for matching external systems.",
+            "example": "Acme Corp, external ID acme-001, billing@acme.com."
+          },
+          {
+            "title": "Business entity",
+            "body": "Each customer belongs to one business entity, the legal entity that issues its invoices. The dashboard does not let you change it after creation.",
+            "example": "A German and a US entity exist; Acme is created under the German one."
+          },
+          {
+            "title": "Addresses and tax IDs",
+            "body": "The billing address appears on invoices; shipping defaults to billing. The tax ID type follows the country (GST, VAT, TIN).",
+            "example": "Pick Germany and the VAT field appears."
+          },
+          {
+            "title": "Contacts",
+            "body": "Any number of extra people, each independently set to receive invoice communications.",
+            "example": "finance@acme.com gets invoices; the CTO does not."
+          }
+        ]
+      },
+      {
+        "title": "Billing relationships",
+        "cards": [
+          {
+            "title": "Wallet",
+            "body": "A per-currency credit balance applied when an invoice is approved, unless turned off for that invoice. Earlier contract experience only.",
+            "example": "A $200 promo credit reduces a $1,000 invoice to $800."
+          },
+          {
+            "title": "Parent and child",
+            "body": "A child customer still generates its own invoice, but it is billed to and paid by the parent. Nothing is merged. Earlier contract experience only.",
+            "example": "Three subsidiaries each get an invoice, all addressed to headquarters."
+          },
+          {
+            "title": "Consolidated invoice",
+            "body": "Separately, you can manually combine already-generated invoices of linked customers into one document from the invoice list.",
+            "example": "Merge the three subsidiary invoices at month end."
+          },
+          {
+            "title": "Customer portal",
+            "body": "A self-service view where customers see their invoice details. A session for a customer or guest can be created through the API.",
+            "example": "Create a session so a customer can view their invoices."
+          }
+        ]
+      },
+      {
+        "title": "Custom attributes on customers",
+        "cards": [
+          {
+            "title": "Account-level fields",
+            "body": "Defined once in Settings, then shown on every customer: transaction type, tier, segment. A required one must be filled before saving.",
+            "example": "Sales region on every customer."
+          },
+          {
+            "title": "Tax exemption",
+            "body": "There is no standard tax-exempt field. It appears only if you define an exempt tax custom attribute for customers.",
+            "example": "Add an Exempt checkbox attribute, then mark charities as exempt."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Unique keys.</b> External ID and email must each be unique in the organization.",
+    "<b>Business entity.</b> It cannot be changed in the dashboard after creation. This is enforced in the edit form, not on the record itself.",
+    "<b>Deleting.</b> A customer cannot be deleted while any contract references it. Remove it from every contract first. Deletion is a soft delete.",
+    "<b>Newer contract experience.</b> Wallets and the Add as child toggle are not shown under Contracts V3.",
+    "<b>Tax exemption.</b> Needs a custom attribute you define yourself.",
+    "<b>Contact settings.</b> The contract-communications setting exists in the data model but has no dashboard control today."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "cust",
+    "groups": [
+      {
+        "title": "Customers",
+        "items": [
+          "List customers (filter, sort, paginate)",
+          "Create customer",
+          "Get customer by ID",
+          "Update customer",
+          "Delete customer",
+          "Create customer relationships",
+          "List, attach and delete payment methods",
+          "Get, patch and delete customer connector",
+          "Create customer or guest session"
+        ]
+      },
+      {
+        "title": "Customer addresses",
+        "items": [
+          "List, create, get, update and delete address"
+        ]
+      },
+      {
+        "title": "Contacts",
+        "items": [
+          "List, create, get, update and delete contact"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "What is the only required field on a customer?",
+      "options": [
+        "Email",
+        "Name",
+        "External ID"
+      ],
+      "answer": 1,
+      "explanation": "Name is required; external ID and email must be unique when present."
+    },
+    {
+      "question": "Can you delete a customer that a contract still references?",
+      "options": [
+        "Yes, the contract is deleted too",
+        "No, remove it from every contract first",
+        "Yes, but only on weekends"
+      ],
+      "answer": 1,
+      "explanation": "Deletion is blocked while a contract references the customer, and it is a soft delete."
+    },
+    {
+      "question": "A child customer generates usage. Who pays the invoice?",
+      "options": [
+        "The child",
+        "The parent, on the child's own separate invoice",
+        "Neither until merged"
+      ],
+      "answer": 1,
+      "explanation": "The child keeps its own invoice, addressed to and paid by the parent."
+    },
+    {
+      "question": "Where does a tax-exempt flag come from?",
+      "options": [
+        "A standard field",
+        "A custom attribute you define",
+        "The billing address"
+      ],
+      "answer": 1,
+      "explanation": "It appears only if the organization defines an exempt tax custom attribute."
+    },
+    {
+      "question": "When are wallet credits applied?",
+      "options": [
+        "At invoice approval, unless turned off for that invoice",
+        "At contract creation",
+        "Only on refunds"
+      ],
+      "answer": 0,
+      "explanation": "Credits offset the amount due when the invoice is approved."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Customer vs contact?",
+      "answer": "The customer is the entity you bill. Contacts are extra people on it, each with their own invoice-communication setting."
+    },
+    {
+      "type": "Difference",
+      "question": "External ID vs Zenskar ID?",
+      "answer": "The Zenskar ID is the internal identifier. The external ID is your own identifier. Send a UUID and Zenskar can use it as the ID; send a non-UUID and it is stored as the external ID."
+    },
+    {
+      "type": "Difference",
+      "question": "Wallet vs credit note?",
+      "answer": "A wallet is a per-currency credit balance applied when an invoice is approved. A credit note is created against a specific invoice."
+    },
+    {
+      "type": "Difference",
+      "question": "Parent and child billing vs consolidated invoices?",
+      "answer": "Parent and child routes a child's own invoice to the parent for payment. Consolidation manually combines already-generated invoices of linked customers into one document."
+    },
+    {
+      "type": "Difference",
+      "question": "Customer vs business entity?",
+      "answer": "The business entity is your legal entity that issues invoices. The customer is who you bill, and belongs to one entity."
+    },
+    {
+      "type": "Difference",
+      "question": "custom_data vs custom_attributes?",
+      "answer": "They are the same idea under different API names: the Customer object uses custom_data, while contracts and products use custom_attributes. A separate field also named custom_attributes on some objects is for tagging."
+    },
+    {
+      "type": "Difference",
+      "question": "Billing address vs shipping address?",
+      "answer": "Billing appears on invoices and drives regional tax calculation. Shipping defaults to billing."
+    },
+    {
+      "type": "Difference",
+      "question": "auto_charge_enabled vs communications_enabled?",
+      "answer": "Auto charge controls automatic payment charging. Communications controls emails such as invoices and receipts."
+    },
+    {
+      "type": "Use case",
+      "question": "Link a customer to Stripe?",
+      "answer": "Set the connector with name stripe and the Stripe customer ID as reference_id, through the customer connector endpoint or the bulk import."
+    },
+    {
+      "type": "Use case",
+      "question": "Migrate customers from a CRM?",
+      "answer": "Send the CRM ID as external_id so you can match records both ways."
+    },
+    {
+      "type": "Use case",
+      "question": "Subsidiaries paying through headquarters?",
+      "answer": "Use parent and child billing: each child still gets an invoice, billed to the parent."
+    },
+    {
+      "type": "Use case",
+      "question": "Give a customer a promotional balance?",
+      "answer": "A wallet credit reduces the next approved invoice."
+    },
+    {
+      "type": "Use case",
+      "question": "Mark a charity tax exempt?",
+      "answer": "Define an exempt tax custom attribute for customers, then set it on the charity."
+    },
+    {
+      "type": "Use case",
+      "question": "Send invoices only to finance?",
+      "answer": "Add the finance address as a contact with invoice communications on, and leave it off for other contacts."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete a customer with contracts?",
+      "answer": "No. Remove it from every contract first. Deletion is a soft delete."
+    },
+    {
+      "type": "Edge case",
+      "question": "What if two customers share an email?",
+      "answer": "Email must be unique in the organization, so the second create fails."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can a customer change business entity?",
+      "answer": "Not in the dashboard after creation."
+    },
+    {
+      "type": "Edge case",
+      "question": "What if the address is missing or wrong?",
+      "answer": "Regional tax calculation depends on it, so tax can be wrong or unresolved."
+    },
+    {
+      "type": "Edge case",
+      "question": "Why was a customer not pushed to Stripe?",
+      "answer": "Export only pushes a customer when it is first created. Existing customers need the bulk CSV import with a reference_id column."
+    },
+    {
+      "type": "Edge case",
+      "question": "Where are wallets under Contracts V3?",
+      "answer": "Wallets and the Add as child toggle are not shown under the newer experience."
+    },
+    {
+      "type": "How it works",
+      "question": "How does usage find its customer?",
+      "answer": "A usage event carries customer_id, which a metric matches to external ID or Zenskar ID by default."
+    },
+    {
+      "type": "How it works",
+      "question": "How do I enable consolidated invoices through the API?",
+      "answer": "Older reference docs describe setting parent_customer_id and invoice_consolidation_enabled in custom_data."
+    }
+  ]
+}

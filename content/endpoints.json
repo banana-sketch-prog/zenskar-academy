@@ -1,0 +1,542 @@
+{
+  "setup": "<div class=\"card\"><h3>Postman setup</h3><p>Base URL <code>https://api.zenskar.com</code>. Every request needs two headers: <code>x-api-key</code> and <code>organisation</code> (your organisation ID). An optional <code>apiversion</code> header pins the API version (default 20230501). Bodies are JSON with <code>Content-Type: application/json</code>.</p><p>Create a Postman environment with <code>base_url</code>, <code>api_key</code> and <code>org_id</code>. Sandbox keys start with sandbox_ and production keys with production_.</p><p>To import in one go, use the collection JSON below (Postman: Import, Raw text), or copy a single request with Copy curl.</p></div>",
+  "sets": {
+    "pricing": {
+      "title": "Products and pricing",
+      "note": "Two generations exist. Contracts V3 organizations use /v3/products; the classic API uses /products. Use whichever matches your tenant.",
+      "groups": [
+        {
+          "title": "Products (V3)",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/v3/products",
+              "description": "Create a product. Type and subtype must be compatible (point_in_time: quantity or credits; period_of_time: quantity or feature).",
+              "body": {
+                "name": "API calls",
+                "description": "Metered API usage",
+                "sku": "api_calls_001",
+                "type": "point_in_time",
+                "subtype": "quantity",
+                "unit": {
+                  "singular": "API call",
+                  "plural": "API calls"
+                },
+                "tax_category": "ZEN_TAX_00001",
+                "status": "active",
+                "custom_attributes": {}
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/v3/products",
+              "description": "List products (paginated, filterable).",
+              "body": null
+            },
+            {
+              "method": "GET",
+              "path": "/v3/products/pricings",
+              "description": "Search products with nested pricing presets.",
+              "body": null
+            },
+            {
+              "method": "GET",
+              "path": "/v3/products/{product_id}",
+              "description": "Get a product by ID.",
+              "body": null
+            },
+            {
+              "method": "PATCH",
+              "path": "/v3/products/{product_id}",
+              "description": "Partially update a product. Type cannot change once pricing exists; cannot deactivate if used in an active contract.",
+              "body": {
+                "description": "Updated description",
+                "status": "active"
+              }
+            },
+            {
+              "method": "DELETE",
+              "path": "/v3/products/{product_id}",
+              "description": "Soft-delete a product and its pricing presets. Blocked while any contract references it.",
+              "body": null
+            }
+          ]
+        },
+        {
+          "title": "Products (classic)",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/products",
+              "description": "Create a product.",
+              "body": {
+                "type": "product",
+                "name": "Storage Overage",
+                "description": "Additional storage usage charges",
+                "sku": "storage_001",
+                "tax_codes": {
+                  "tax_code": "digital_service"
+                },
+                "is_active": true
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/products/{product_id}/pricing",
+              "description": "List pricing models of a product.",
+              "body": null
+            },
+            {
+              "method": "POST",
+              "path": "/products/{product_id}/pricing",
+              "description": "Create a pricing model. Body is a skeleton from the response schema: copy a pricing returned by GET for a product configured in the UI.",
+              "body": {
+                "pricing_data": {
+                  "pricing_type": "<model>",
+                  "unit_amount": 0,
+                  "prices": [],
+                  "dimensions": []
+                },
+                "is_recurring": true,
+                "billing_period": {
+                  "offset": "prepaid",
+                  "cadence": "P1M"
+                },
+                "add_to_catalog": true,
+                "usage_report_configs": []
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/products/{product_id}/pricing/{pricing_id}",
+              "description": "Get one pricing model.",
+              "body": null
+            },
+            {
+              "method": "PATCH",
+              "path": "/products/{product_id}/pricing/{pricing_id}",
+              "description": "Update a pricing model.",
+              "body": {
+                "add_to_catalog": true
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Classic: get, update and delete product; delete pricing; product bundle pricing (/products/bundle/{product_id}/pricing/{pricing_id})"
+      ]
+    },
+    "cust": {
+      "title": "Customers",
+      "note": "",
+      "groups": [
+        {
+          "title": "Customers",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/customers",
+              "description": "Create a customer. Only customer_name is required. Email must be unique. The address drives regional tax calculation.",
+              "body": {
+                "customer_name": "Acme Corporation",
+                "external_id": "acme-001",
+                "email": "billing@acme.com",
+                "phone_number": "+1-555-0100",
+                "address": {
+                  "line1": "123 Business Ave",
+                  "city": "San Francisco",
+                  "state": "CA",
+                  "zipCode": "94102",
+                  "country": "United States",
+                  "country_code": "US"
+                },
+                "tax_info": [
+                  {
+                    "country_code": "US",
+                    "tax_code": "EIN",
+                    "tax_id": "12-3456789"
+                  }
+                ],
+                "custom_data": {
+                  "industry": "Technology"
+                },
+                "communications_enabled": true,
+                "auto_charge_enabled": true
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/customers/{customer_id}",
+              "description": "Update a customer. Send only the fields to change.",
+              "body": {
+                "customer_name": "Acme Corp",
+                "email": "ap@acme.com",
+                "auto_charge_enabled": false
+              }
+            },
+            {
+              "method": "DELETE",
+              "path": "/customers/{customer_id}",
+              "description": "Delete a customer (soft delete). Blocked while a contract references it.",
+              "body": null
+            },
+            {
+              "method": "GET",
+              "path": "/customers/{customer_id}",
+              "description": "Get a customer by ID.",
+              "body": null
+            },
+            {
+              "method": "PATCH",
+              "path": "/customers/{customer_id}/connector",
+              "description": "Set the external system ID (for example the Stripe customer ID).",
+              "body": {
+                "connector": {
+                  "name": "stripe",
+                  "reference_id": "cus_XXXX"
+                }
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/contacts",
+              "description": "Create a contact (see the reference page for fields).",
+              "body": null
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Create customer relationships, list/attach/delete payment methods, customer addresses (list, create, get, update, delete), contacts (list, get, update, delete), create customer or guest session: paths are on the API reference pages"
+      ]
+    },
+    "usage": {
+      "title": "Usage and metering",
+      "note": "Two different things share the name usage event: the definition (a collection, created at /rawmetrics) and the individual events you send to /usage/{api_slug}.",
+      "groups": [
+        {
+          "title": "Definitions and events",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/rawmetrics",
+              "description": "Create a usage-event definition (collection) with its data schema and API slug.",
+              "body": {
+                "name": "Compute events",
+                "api_slug": "compute_events",
+                "dataschema": {
+                  "data": {
+                    "cpu_hours_consumed": "Float64",
+                    "region": "String"
+                  },
+                  "timestamp": "DateTime64",
+                  "customer_id": "String"
+                },
+                "column_order": [
+                  "timestamp"
+                ]
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/usage/{api_slug}",
+              "description": "Send one usage event to a collection. Include event_id in data if you need to ignore duplicates later.",
+              "body": {
+                "customer_id": "<customer_uuid or external id>",
+                "timestamp": "2026-11-11T10:00:00Z",
+                "data": {
+                  "cpu_hours_consumed": 10.5,
+                  "region": "us-east-1",
+                  "event_id": "evt_101"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "title": "Billable metrics",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/aggregates",
+              "description": "Create a billable metric. All six fields are required; the safest template is a metric created in the UI and read back with GET.",
+              "body": {
+                "name": "API calls",
+                "dataschema": "",
+                "aggregation_query": "SELECT COUNT(*) AS quantity FROM raw_metric_compute_events WHERE customer_id = {{customer.external_id}} AND DATE(timestamp) >= DATE({{start_date}}) AND DATE(timestamp) <= DATE({{end_date}})",
+                "cust_agg_query": "",
+                "visual_query_builder": {},
+                "datasource": "<data_source_uuid>"
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/aggregates/{aggregate_id}",
+              "description": "Update a billable metric.",
+              "body": {
+                "name": "API calls (v2)"
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Usage events API: list, get, update, delete a definition, get by slug, get usage event logs; billable metrics: list, get, delete, estimates for a period; data sources: list, create, get, update connector"
+      ]
+    },
+    "contracts": {
+      "title": "Contracts, phases and lifecycle",
+      "note": "",
+      "groups": [
+        {
+          "title": "Contracts",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/contract_v2",
+              "description": "Create a contract. status accepts draft or active only. Phases must not overlap and must sit inside the contract dates.",
+              "body": {
+                "customer_id": "<customer_uuid>",
+                "name": "Annual Subscription - Acme Corp",
+                "status": "draft",
+                "currency": "USD",
+                "start_date": "2026-01-01T00:00:00Z",
+                "end_date": "2026-12-31T23:59:59Z",
+                "anchor_date": "2026-01-01T00:00:00Z",
+                "is_last_day_of_month": false,
+                "renewal_policy": "do_not_renew",
+                "phases": [
+                  {
+                    "name": "Standard Phase",
+                    "start_date": "2026-01-01T00:00:00Z",
+                    "end_date": "2026-12-31T23:59:59Z"
+                  }
+                ]
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/contract_v2/{contract_id}/pause",
+              "description": "Pause a contract.",
+              "body": {
+                "start_date": "2026-06-01T00:00:00Z",
+                "end_date": "2026-06-30T23:59:59Z",
+                "unpause_extension_policy": "extend"
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/contract_v2/{contract_id}/pause",
+              "description": "Edit an existing pause: start date, resume date or extension policy.",
+              "body": {
+                "end_date": "2026-07-15T23:59:59Z"
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/contract_v2/{contract_id}/expire",
+              "description": "Expire a contract. Date only; expiry time is end of day (23:59:59.999999). Defaults to today.",
+              "body": {
+                "expiry_date": "2026-12-31"
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "List, get, update and delete contract (only non-active contracts can be deleted), resume, create phase, create phase pricing, get amendments; plans: list, create, get, update, delete, phases, phase pricing, new version"
+      ]
+    },
+    "inv": {
+      "title": "Invoices",
+      "note": "",
+      "groups": [
+        {
+          "title": "Invoices",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/invoices/generate_invoice",
+              "description": "Generate an invoice for a customer and contract over a date range.",
+              "body": {
+                "customer_id": "<customer_uuid>",
+                "contract_id": "<contract_uuid>",
+                "from_date": "2026-10-01T00:00:00Z",
+                "to_date": "2026-10-31T23:59:59Z",
+                "check_duplicate_invoice": true
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/invoices/{invoice_id}/approve?send_email=false",
+              "description": "Approve an invoice. send_email defaults to true.",
+              "body": {
+                "check_duplicate_invoice": true
+              }
+            },
+            {
+              "method": "PATCH",
+              "path": "/invoices/v3/{invoice_id}/approve",
+              "description": "Approve a V3 invoice. A material tax change beyond policy keeps it in draft (409).",
+              "body": null
+            }
+          ]
+        }
+      ],
+      "more": [
+        "List invoices, get invoice, get by external ID, line items, void invoice, create credit note against invoice; credit notes: list, create, get, update, line items"
+      ]
+    },
+    "pay": {
+      "title": "Payments",
+      "note": "",
+      "groups": [
+        {
+          "title": "Payments",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/payments",
+              "description": "Record a payment. Amounts are integers in the smallest currency unit. If a 422 complains about the invoices amount type, try a string.",
+              "body": {
+                "amount": 100000,
+                "currency_code": "USD",
+                "customer_id": "<customer_uuid>",
+                "payment_method": "bank_transfer",
+                "type": "payment",
+                "invoices": [
+                  {
+                    "invoice_id": "<invoice_uuid>",
+                    "amount": 100000
+                  }
+                ]
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/payments/{payment_id}/refund",
+              "description": "Refund an existing payment, optionally split across invoices.",
+              "body": {
+                "refund_amount": 50000,
+                "refund_payment_part_amounts": [
+                  {
+                    "invoice_id": "<invoice_uuid>",
+                    "amount": 50000
+                  }
+                ],
+                "writeoff_invoices": false,
+                "description": "Partial refund",
+                "timestamp": "2026-11-11T10:00:00Z"
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Get payments, get payment by ID, get invoice payments, update/edit/delete manual payment, create invoice charge"
+      ]
+    },
+    "ents": {
+      "title": "Entitlements",
+      "note": "",
+      "groups": [
+        {
+          "title": "Entitlements",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/entitlements",
+              "description": "Create an entitlement.",
+              "body": {
+                "name": "API calls",
+                "description": "Monthly API call allowance",
+                "units": "calls",
+                "is_active": true,
+                "product_id": "<product_uuid>"
+              }
+            },
+            {
+              "method": "POST",
+              "path": "/entitlements/{entitlement_id}/customer",
+              "description": "Grant an entitlement to a customer.",
+              "body": {
+                "customer": "<customer_uuid>",
+                "expiry_at": "2026-12-31T23:59:59Z",
+                "status": "active"
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/entitlements/entitlement_customer/{ec_id}",
+              "description": "Get a customer entitlement by its row ID.",
+              "body": null
+            },
+            {
+              "method": "GET",
+              "path": "/entitlements/{entitlement_id}/customer/{customer_id}/{ec_id}",
+              "description": "Get one customer entitlement.",
+              "body": null
+            }
+          ]
+        }
+      ],
+      "more": [
+        "List, get, update, delete entitlement; list customer entitlements and balances; update and delete customer entitlement"
+      ]
+    },
+    "admin": {
+      "title": "Custom attributes (admin)",
+      "note": "The Customer object stores values in custom_data; contracts and products use custom_attributes.",
+      "groups": [
+        {
+          "title": "Definitions",
+          "endpoints": [
+            {
+              "method": "POST",
+              "path": "/custom_attributes",
+              "description": "Create a definition. Key name and data type cannot change later. Path of the collection is inferred from the get-by-ID path.",
+              "body": {
+                "module": "customers",
+                "attribute_key_name": "sales_region",
+                "display_name": "Sales region",
+                "data_type": "ENUM",
+                "enum_choices": [
+                  "EMEA",
+                  "APAC",
+                  "Americas"
+                ],
+                "default_value": "EMEA",
+                "is_required": false,
+                "description": "Sales region of the customer"
+              }
+            },
+            {
+              "method": "GET",
+              "path": "/custom_attributes/{definition_id}",
+              "description": "Get a definition by ID.",
+              "body": null
+            },
+            {
+              "method": "GET",
+              "path": "/custom_attributes",
+              "description": "List definitions (filter by module or business entity). Inferred path.",
+              "body": null
+            },
+            {
+              "method": "PATCH",
+              "path": "/custom_attributes/{definition_id}",
+              "description": "Update a definition. Key name and data type are generally not updatable. Inferred path.",
+              "body": {
+                "display_name": "Sales territory"
+              }
+            }
+          ]
+        }
+      ],
+      "more": [
+        "Business entities: list, create, get, update, config and region config; tags: list, upsert; tax: categories, jurisdiction rates, resolve rate; jobs"
+      ]
+    }
+  }
+}

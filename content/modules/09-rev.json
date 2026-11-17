@@ -1,0 +1,257 @@
+{
+  "key": "rev",
+  "name": "Revenue recognition",
+  "group": "Billing and money",
+  "description": "ASC 606, schedules, adjustments and period close.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Recognition is independent of invoicing",
+    "Adjustments over 5% must be front-loaded",
+    "Closed periods cannot change"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "The model",
+        "cards": [
+          {
+            "title": "Five steps",
+            "body": "ASC 606 and IFRS 15: identify the contract, identify performance obligations, determine the price, allocate it, recognize revenue. Zenskar identifies obligations from the products and features in each phase.",
+            "example": "A subscription plus onboarding gives two obligations."
+          },
+          {
+            "title": "Over time or at a point",
+            "body": "Subscriptions and managed services are recognized over time; deliveries and milestones at a point in time.",
+            "example": "A delivery is recognized on delivery."
+          }
+        ]
+      },
+      {
+        "title": "Distribution and adjustment",
+        "cards": [
+          {
+            "title": "Distribution methods",
+            "body": "Over-time obligations get a baseline schedule: straight-line, usage-based (tied to consumption) or entitlement-based (credits, milestones, features).",
+            "example": "$12,000 per year straight-line is $1,000 per month."
+          },
+          {
+            "title": "Adjustment methods",
+            "body": "When reality changes, a revised schedule is built by front-load (next open period, required for material changes above 5%), straight-line over remaining periods, or back-load (final period).",
+            "example": "A 10% scope increase is front-loaded."
+          },
+          {
+            "title": "Monitoring and audit",
+            "body": "Zenskar watches for scope changes, usage variance, variable consideration and FX. Each adjustment keeps its rationale, approval workflow and audit trail.",
+            "example": "Usage overshoots forecast, so the schedule is revised."
+          }
+        ]
+      },
+      {
+        "title": "Accounting and close",
+        "cards": [
+          {
+            "title": "Ledger objects",
+            "body": "Chart of accounts, accounts, journal entries and lines, balance sheet and income statement.",
+            "example": "A journal entry per recognized amount."
+          },
+          {
+            "title": "Period close",
+            "body": "Validate period close returns a checklist without closing. Closing then locks the period: no transactions inside it can be modified.",
+            "example": "Validate March, fix gaps, then close."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Separate clocks.</b> Recognition dates are independent of invoice and payment dates.",
+    "<b>The 5% rule.</b> Material adjustments above 5% are front-loaded.",
+    "<b>Closed means closed.</b> After closing, nothing in the period can change, so always validate first.",
+    "<b>Not legal advice.</b> Zenskar does not assess whether a contract is legally enforceable or replace accounting judgment.",
+    "<b>Entitlements.</b> They are off-balance-sheet and not reconciled with financial transactions.",
+    "<b>Version note.</b> Accounting was reorganized in the newer docs; confirm what your tenant has enabled."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "",
+    "groups": [
+      {
+        "title": "Accounting",
+        "items": [
+          "Get chart of accounts, get and create account",
+          "Get, create and update journal entry; get journal entries and lines",
+          "Get balance sheet, income statement, balance by tag",
+          "Get, create and update close date",
+          "Validate period close, close accounting period",
+          "Get accounting periods, get last closed period"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which method fits a usage-priced service?",
+      "options": [
+        "Straight-line",
+        "Usage-based distribution",
+        "Back-load"
+      ],
+      "answer": 1,
+      "explanation": "Usage-based ties recognition to consumption."
+    },
+    {
+      "question": "An adjustment is 8% of the contract. Which method is required?",
+      "options": [
+        "Back-load",
+        "Front-load",
+        "Straight-line"
+      ],
+      "answer": 1,
+      "explanation": "Material adjustments above 5% are front-loaded."
+    },
+    {
+      "question": "What does back-load do?",
+      "options": [
+        "Recognizes immediately",
+        "Defers to the final period when outcomes are certain",
+        "Spreads evenly"
+      ],
+      "answer": 1,
+      "explanation": "It is for uncertain outcomes."
+    },
+    {
+      "question": "Before closing a period you should…",
+      "options": [
+        "Close and see",
+        "Run validate period close",
+        "Delete journal lines"
+      ],
+      "answer": 1,
+      "explanation": "Validation returns a checklist without closing."
+    },
+    {
+      "question": "Does revenue follow the invoice date?",
+      "options": [
+        "Yes always",
+        "No, they are independent",
+        "Only for usage"
+      ],
+      "answer": 1,
+      "explanation": "Recognition depends on performance, not billing."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Billing vs revenue recognition?",
+      "answer": "Billing is what you charge and when. Revenue is when you have earned it."
+    },
+    {
+      "type": "Difference",
+      "question": "Straight-line vs usage-based vs entitlement-based distribution?",
+      "answer": "Straight-line spreads evenly, usage-based follows consumption, entitlement-based follows credits, milestones or features."
+    },
+    {
+      "type": "Difference",
+      "question": "Front-load vs straight-line vs back-load adjustment?",
+      "answer": "Front-load books the change in the next open period, straight-line spreads it over remaining periods, back-load defers it to the last period."
+    },
+    {
+      "type": "Difference",
+      "question": "Over time vs point in time?",
+      "answer": "Subscriptions are recognized over time; deliveries and milestones at a point in time."
+    },
+    {
+      "type": "Difference",
+      "question": "Validate vs close a period?",
+      "answer": "Validate returns a checklist without closing. Close locks the period."
+    },
+    {
+      "type": "Difference",
+      "question": "Journal entry vs journal line?",
+      "answer": "An entry groups lines that make the accounting posting."
+    },
+    {
+      "type": "Difference",
+      "question": "Balance sheet vs income statement?",
+      "answer": "Position at a date versus performance over a period."
+    },
+    {
+      "type": "Difference",
+      "question": "Entitlement vs recognized revenue?",
+      "answer": "Entitlements are usage rights, off-balance-sheet, and not reconciled to revenue."
+    },
+    {
+      "type": "Use case",
+      "question": "Annual subscription revenue?",
+      "answer": "Straight-line over the term."
+    },
+    {
+      "type": "Use case",
+      "question": "Metered consumption contract?",
+      "answer": "Usage-based distribution."
+    },
+    {
+      "type": "Use case",
+      "question": "Scope increases 10% mid-term?",
+      "answer": "Material (above 5%), so front-load."
+    },
+    {
+      "type": "Use case",
+      "question": "Month-end close?",
+      "answer": "Validate, fix gaps, then close the period."
+    },
+    {
+      "type": "Use case",
+      "question": "Milestone-based service?",
+      "answer": "Entitlement-based distribution."
+    },
+    {
+      "type": "Edge case",
+      "question": "Material threshold?",
+      "answer": "Adjustments above 5% must be front-loaded."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I edit a closed period?",
+      "answer": "No."
+    },
+    {
+      "type": "Edge case",
+      "question": "Is a legally unenforceable contract flagged?",
+      "answer": "No. Zenskar does not assess legal enforceability or replace accounting judgment."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does the invoice date move revenue?",
+      "answer": "No."
+    },
+    {
+      "type": "Edge case",
+      "question": "What if usage overshoots the forecast?",
+      "answer": "Monitoring flags the variance and an adjustment schedule is proposed with rationale and approval."
+    },
+    {
+      "type": "How it works",
+      "question": "What are the five steps?",
+      "answer": "Identify the contract, identify obligations, determine the price, allocate it, recognize revenue."
+    },
+    {
+      "type": "How it works",
+      "question": "How are obligations identified?",
+      "answer": "From the products and features configured in each phase."
+    },
+    {
+      "type": "How it works",
+      "question": "What is kept for audit?",
+      "answer": "Rationale, approval workflow and an audit trail for each adjustment."
+    }
+  ]
+}

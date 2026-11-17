@@ -1,0 +1,307 @@
+{
+  "key": "admin",
+  "name": "Admin and security",
+  "group": "Platform",
+  "description": "Custom attributes, API keys, webhooks, RBAC and SSO.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Custom attributes copy once, at creation",
+    "API keys are shown once",
+    "Webhooks are at-least-once and unordered"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Custom attributes",
+        "cards": [
+          {
+            "title": "What they are",
+            "body": "Fields you add to customers, contracts or products. Name and key are unique across the organization. The key and type cannot change, and an attribute cannot be deleted.",
+            "example": "Sales region (key sales_region), type Dropdown."
+          },
+          {
+            "title": "Types",
+            "body": "Text, Whole number, Decimal number, Checkbox, Dropdown, Multi-select, Array.",
+            "example": "Multi-select: EMEA and APAC."
+          },
+          {
+            "title": "Scope and required",
+            "body": "One business entity (customer and contract attributes) or all entities (also product attributes). Required means a value on every record: default is written if blank, and without a default saving fails.",
+            "example": "Required Sales region with default EMEA."
+          },
+          {
+            "title": "Copied values",
+            "body": "A customer attribute copies to new contracts and invoices; a contract attribute to its invoices; product attributes never copy. Copy happens once at creation and later changes do not flow.",
+            "example": "Acme APAC, then Americas: Contract_1 keeps APAC, Contract_2 gets Americas."
+          },
+          {
+            "title": "Where they are used",
+            "body": "Billable metric SQL variables (customer, contract, product) and document or email templates.",
+            "example": "{{customer.custom_attributes.sales_region}}"
+          }
+        ]
+      },
+      {
+        "title": "Entities and access",
+        "cards": [
+          {
+            "title": "Business entity",
+            "body": "The legal or billing unit that issues invoices, with its own tax configuration, served countries and optionally scoped custom attributes.",
+            "example": "Acme DE GmbH."
+          },
+          {
+            "title": "RBAC",
+            "body": "Permissions are grouped into roles; roles are assigned to users, who can also get extra permissions.",
+            "example": "A role with can_read_webhook only."
+          },
+          {
+            "title": "SAML SSO and 2FA",
+            "body": "SAML works with Microsoft Entra ID, Google Workspace and Okta, with domain verification. Two-factor authentication is available for users.",
+            "example": "Sign in with Okta."
+          },
+          {
+            "title": "Communications",
+            "body": "Email templates and alerts, document templates, senders and sent emails, with template variables for invoices, credit notes, receipts and usage reports.",
+            "example": "Customize the invoice PDF."
+          }
+        ]
+      },
+      {
+        "title": "API and webhooks",
+        "cards": [
+          {
+            "title": "API keys",
+            "body": "Sent in the x-api-key header. Prefixed sandbox_ or production_. Shown once; Zenskar stores only a hash. No expiry and no scoping: a key inherits the organization's permissions.",
+            "example": "Create a key named billing-sync."
+          },
+          {
+            "title": "Calling the API",
+            "body": "Lists use next or previous cursors with a limit. Two OpenAPI specs exist (20240301 and 20260301). Usage events go to api.zenskar.com/usage/{api_slug}.",
+            "example": "Page through customers with a cursor."
+          },
+          {
+            "title": "Webhooks",
+            "body": "Zenskar POSTs events (customer, payment, usage ingestion) to an HTTPS endpoint, signed with X-Signature (HMAC-SHA256 of the raw body). Up to 3 attempts, 30 second timeout, 4xx not retried.",
+            "example": "payment.succeeded updates your CRM."
+          },
+          {
+            "title": "Handling deliveries",
+            "body": "Delivery is at-least-once and unordered. Deduplicate on event_id and apply events by occurred_at per object_id.",
+            "example": "Skip an event older than the last applied one."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Required without default.</b> Saving a record without a value fails.",
+    "<b>Copied values.</b> Once, at creation. Source changes do not propagate and copy changes do not flow back.",
+    "<b>Option removed.</b> Records keep a dropdown option that was later removed.",
+    "<b>Scope change.</b> Changing scope or required status does not change saved values.",
+    "<b>Lost API key.</b> It cannot be recovered. Delete it and create a new one.",
+    "<b>Signatures.</b> Hash the raw body bytes; re-serializing JSON breaks the match.",
+    "<b>Webhook URLs.</b> Must be HTTPS and not point at private or internal hosts.",
+    "<b>Key stability.</b> The custom attribute key and type are permanent; only the name can change."
+  ],
+  "api": {
+    "note": "Auth: <code>x-api-key: sandbox_...</code> or <code>production_...</code>. Webhook signature: <code>sha256=</code> plus HMAC-SHA256 of the exact body bytes with the webhook secret.",
+    "endpointSet": "admin",
+    "groups": [
+      {
+        "title": "Custom attributes",
+        "items": [
+          "List custom attribute definitions (by module, business entity)",
+          "Create custom attribute definition",
+          "Get custom attribute definition",
+          "Update custom attribute definition (key name and data type generally not updatable)"
+        ]
+      },
+      {
+        "title": "Business entities",
+        "items": [
+          "List, create, get and update business entity",
+          "Get and set business entity config",
+          "Get, upsert and delete region config"
+        ]
+      },
+      {
+        "title": "Other",
+        "items": [
+          "List and upsert tags",
+          "List jobs and job outcomes"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which header carries the API key?",
+      "options": [
+        "Authorization",
+        "x-api-key",
+        "X-Token"
+      ],
+      "answer": 1,
+      "explanation": "Keys are prefixed sandbox_ or production_."
+    },
+    {
+      "question": "You lost an API key. What now?",
+      "options": [
+        "Retrieve it in Settings",
+        "Create a new key; the old one cannot be recovered",
+        "Ask support to reveal it"
+      ],
+      "answer": 1,
+      "explanation": "Only a hash is stored."
+    },
+    {
+      "question": "Acme's Sales region changes to Americas after Contract_1 exists. Contract_1 shows…",
+      "options": [
+        "Americas",
+        "Its original copied value, APAC",
+        "Blank"
+      ],
+      "answer": 1,
+      "explanation": "Copied values do not change when the source changes."
+    },
+    {
+      "question": "Can a custom attribute be deleted?",
+      "options": [
+        "Yes",
+        "No",
+        "Only product attributes"
+      ],
+      "answer": 1,
+      "explanation": "Attributes cannot be deleted and their key and type are permanent."
+    },
+    {
+      "question": "How should a webhook handler cope with duplicates and reordering?",
+      "options": [
+        "Process in arrival order",
+        "Deduplicate on event_id and apply by occurred_at",
+        "Ignore failures"
+      ],
+      "answer": 1,
+      "explanation": "Delivery is at-least-once and unordered."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Custom attribute vs tag?",
+      "answer": "Custom attributes are defined fields; tagging is a separate field also called custom_attributes on some objects."
+    },
+    {
+      "type": "Difference",
+      "question": "Display name vs key name?",
+      "answer": "The display name is shown in the product. The key name is the permanent API identifier."
+    },
+    {
+      "type": "Difference",
+      "question": "Customer attribute vs contract vs product attribute?",
+      "answer": "Customer values copy to new contracts and invoices; contract values to invoices; product values never copy."
+    },
+    {
+      "type": "Difference",
+      "question": "Entity-scoped vs global attribute?",
+      "answer": "Scoped to one business entity or all entities. Product attributes are always global."
+    },
+    {
+      "type": "Difference",
+      "question": "API key vs webhook secret?",
+      "answer": "The key authenticates your calls to Zenskar. The secret verifies Zenskar's calls to you."
+    },
+    {
+      "type": "Difference",
+      "question": "Role vs permission?",
+      "answer": "Permissions are grouped into roles assigned to users."
+    },
+    {
+      "type": "Difference",
+      "question": "SAML SSO vs two-factor?",
+      "answer": "SSO delegates login to your identity provider; two-factor adds a second step."
+    },
+    {
+      "type": "Difference",
+      "question": "Sandbox vs production key?",
+      "answer": "Prefixed sandbox_ or production_ and used against the matching environment."
+    },
+    {
+      "type": "Use case",
+      "question": "Track sales region on customers?",
+      "answer": "A customer dropdown attribute."
+    },
+    {
+      "type": "Use case",
+      "question": "Use an attribute in a billable metric?",
+      "answer": "Reference its key in the SQL variables."
+    },
+    {
+      "type": "Use case",
+      "question": "Notify your CRM on payment?",
+      "answer": "Subscribe a webhook to payment events."
+    },
+    {
+      "type": "Use case",
+      "question": "Limit someone to read-only?",
+      "answer": "Give a role with read permissions only."
+    },
+    {
+      "type": "Use case",
+      "question": "Sign in with Okta?",
+      "answer": "Configure SAML with domain verification."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can a custom attribute be deleted?",
+      "answer": "The dashboard has no delete and keys and types are permanent. A soft delete exists at API level behind a separate permission."
+    },
+    {
+      "type": "Edge case",
+      "question": "Customer region changed later?",
+      "answer": "Copied values do not change on existing contracts."
+    },
+    {
+      "type": "Edge case",
+      "question": "Lost an API key?",
+      "answer": "It cannot be recovered; create a new one."
+    },
+    {
+      "type": "Edge case",
+      "question": "Webhook duplicates or reordering?",
+      "answer": "Deduplicate on event_id and apply by occurred_at."
+    },
+    {
+      "type": "Edge case",
+      "question": "Signature mismatch?",
+      "answer": "Hash the raw body bytes, not re-serialized JSON."
+    },
+    {
+      "type": "Edge case",
+      "question": "Required attribute without a default?",
+      "answer": "Saving fails if blank."
+    },
+    {
+      "type": "Edge case",
+      "question": "Webhook endpoint rules?",
+      "answer": "HTTPS only; 3 attempts, 30 second timeout, 4xx not retried."
+    },
+    {
+      "type": "How it works",
+      "question": "How do I call the API?",
+      "answer": "Send x-api-key and organisation headers to api.zenskar.com."
+    },
+    {
+      "type": "How it works",
+      "question": "What are the webhook event categories?",
+      "answer": "Customer, payment and usage event ingestion."
+    }
+  ]
+}

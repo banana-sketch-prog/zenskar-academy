@@ -1,0 +1,12 @@
+{
+  "name": "zenskar-academy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal learning site for new Zenskar joiners. Content lives in content/, the page is built into one HTML file.",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "build": "node scripts/validate.js && node scripts/build.js",
+    "preview": "node scripts/build.js && npx --yes serve dist"
+  },
+  "engines": { "node": ">=18" }
+}

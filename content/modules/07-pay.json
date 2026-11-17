@@ -1,0 +1,280 @@
+{
+  "key": "pay",
+  "name": "Payments",
+  "group": "Billing and money",
+  "description": "Stripe, charging, refunds and payment records.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "Stripe is the connected gateway",
+    "Charge manually, automatically or in bulk",
+    "Payment method sync is Stripe to Zenskar only"
+  ],
+  "learn": {
+    "intro": "",
+    "subs": [
+      {
+        "title": "Connecting Stripe",
+        "cards": [
+          {
+            "title": "Connect",
+            "body": "Under More, Integrations, Payment Gateways. Zenskar uses Stripe Connect, which is not compatible with Managed Payments. Each Stripe account connects once.",
+            "example": "Sandbox uses a test-mode Stripe account; production uses live mode."
+          },
+          {
+            "title": "Customer sync",
+            "body": "Import only updates existing customers. Export only creates and updates Stripe customers. Import and Export does both.",
+            "example": "A new Zenskar customer is pushed to Stripe on creation."
+          },
+          {
+            "title": "Payment settings",
+            "body": "Settings, Payment: card and net banking (US) options, save payment methods, show amount breakdown, and redirect URLs.",
+            "example": "Success URL returns customers to your app."
+          }
+        ]
+      },
+      {
+        "title": "Collecting money",
+        "cards": [
+          {
+            "title": "Payment links",
+            "body": "Add a link when creating an invoice or later with Include Payment Link. Allow Partial Payment lets customers pay any amount up to the total. PAY ONLINE opens Stripe Checkout.",
+            "example": "Customer pays $400 of a $1,000 invoice."
+          },
+          {
+            "title": "Charging",
+            "body": "Manually with Charge Invoice, automatically with Enable Charge (default Stripe payment method), or in bulk from the invoice list.",
+            "example": "Bulk charge all overdue invoices."
+          },
+          {
+            "title": "ACH credit transfer",
+            "body": "The payment is applied to the customer's oldest pending invoice first.",
+            "example": "A $2,000 transfer clears the oldest invoice, then the next."
+          }
+        ]
+      },
+      {
+        "title": "Payment records",
+        "cards": [
+          {
+            "title": "Types and status",
+            "body": "A payment record has a type of payment, refund or tax_withheld, a status, method, amount in the smallest currency unit and linked invoices.",
+            "example": "A refund links back to the original payment."
+          },
+          {
+            "title": "Events",
+            "body": "Webhooks fire for payment.created, updated, succeeded, failed and refunded.",
+            "example": "payment.failed on a declined card."
+          },
+          {
+            "title": "Refunds",
+            "body": "A refund is created against an existing payment. Do not issue cash refunds against entitlements.",
+            "example": "Refund $50 of a $200 payment."
+          }
+        ]
+      }
+    ],
+    "outro": ""
+  },
+  "edgeCases": [
+    "<b>Export timing.</b> Export pushes a customer to Stripe only when first created. Older customers need the bulk CSV import with a reference_id column.",
+    "<b>Import never creates.</b> Import only updates customers that exist on both sides.",
+    "<b>One direction.</b> Payment method sync runs from Stripe to Zenskar only.",
+    "<b>Credit notes.</b> Zenskar imports Stripe credit notes but does not create or push them.",
+    "<b>Account rules.</b> A Stripe account can be connected once, and should not already be connected to another platform such as Xero.",
+    "<b>Entity is final.</b> The Zenskar entity chosen for the connection cannot change after saving.",
+    "<b>Environment match.</b> Use a test-mode Stripe account for sandbox and live mode for production."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "pay",
+    "groups": [
+      {
+        "title": "Payments",
+        "items": [
+          "Get payments, get payment by ID, get invoice payments",
+          "Create payment",
+          "Create invoice charge",
+          "Update, edit and delete manual payment",
+          "Refund payment"
+        ]
+      },
+      {
+        "title": "Customers",
+        "items": [
+          "List payment methods",
+          "Attach external payment method",
+          "Delete payment method"
+        ]
+      }
+    ]
+  },
+  "widget": "",
+  "quiz": [
+    {
+      "question": "Which payment record types exist?",
+      "options": [
+        "payment, refund, tax_withheld",
+        "charge, credit, debit",
+        "invoice, receipt"
+      ],
+      "answer": 0,
+      "explanation": "These are the documented type values."
+    },
+    {
+      "question": "An ACH credit transfer arrives. What is paid first?",
+      "options": [
+        "The newest invoice",
+        "The oldest pending invoice",
+        "A random invoice"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar applies it oldest first."
+    },
+    {
+      "question": "Does Import only create new Zenskar customers?",
+      "options": [
+        "Yes",
+        "No, it only updates existing ones",
+        "Only if email matches"
+      ],
+      "answer": 1,
+      "explanation": "Use the bulk CSV import for first-time linking."
+    },
+    {
+      "question": "Can one Stripe account be connected twice?",
+      "options": [
+        "Yes, to two entities",
+        "No, each account connects once",
+        "Only in sandbox"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar blocks a second connection."
+    },
+    {
+      "question": "Which way do payment method changes sync?",
+      "options": [
+        "Zenskar to Stripe",
+        "Stripe to Zenskar only",
+        "Both ways"
+      ],
+      "answer": 1,
+      "explanation": "Zenskar does not push payment method changes."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Import only vs export only vs import and export?",
+      "answer": "Import updates existing Zenskar customers from Stripe, export creates and updates Stripe customers, both does both."
+    },
+    {
+      "type": "Difference",
+      "question": "Manual vs automatic vs bulk charging?",
+      "answer": "Manual uses Charge Invoice, automatic uses Enable Charge with the default Stripe method, bulk charges many invoices as a background job."
+    },
+    {
+      "type": "Difference",
+      "question": "Payment vs refund vs tax_withheld?",
+      "answer": "They are payment record types: money received, money returned, and tax withheld by the payer."
+    },
+    {
+      "type": "Difference",
+      "question": "Payment link vs autocharge?",
+      "answer": "A link lets the customer choose how to pay; autocharge uses the saved default method."
+    },
+    {
+      "type": "Difference",
+      "question": "Card vs net banking vs ACH credit transfer?",
+      "answer": "Different payment methods. ACH credit transfers apply to the oldest pending invoice first."
+    },
+    {
+      "type": "Difference",
+      "question": "Full vs partial payment?",
+      "answer": "With Allow Partial Payment the customer can pay any amount up to the total."
+    },
+    {
+      "type": "Difference",
+      "question": "Stripe sandbox vs production?",
+      "answer": "Use a test-mode Stripe account with sandbox and live mode with production."
+    },
+    {
+      "type": "Difference",
+      "question": "Refund vs credit note?",
+      "answer": "A refund returns money for a payment. A credit note adjusts an invoice. Do not issue cash refunds against entitlements."
+    },
+    {
+      "type": "Use case",
+      "question": "Record a wire transfer?",
+      "answer": "Create a payment with a method such as bank_transfer, linked to the invoice."
+    },
+    {
+      "type": "Use case",
+      "question": "Refund one invoice of a multi-invoice payment?",
+      "answer": "Refund with payment-part amounts per invoice."
+    },
+    {
+      "type": "Use case",
+      "question": "Collect card details once and reuse them?",
+      "answer": "Save payment methods and use autocharge."
+    },
+    {
+      "type": "Use case",
+      "question": "Let customers pay online?",
+      "answer": "Include a payment link on the invoice."
+    },
+    {
+      "type": "Use case",
+      "question": "Write off after a refund?",
+      "answer": "The refund request has a writeoff_invoices option."
+    },
+    {
+      "type": "Edge case",
+      "question": "Why was an old customer not exported to Stripe?",
+      "answer": "Export only pushes at first creation. Use bulk CSV import with reference_id."
+    },
+    {
+      "type": "Edge case",
+      "question": "Does import create customers?",
+      "answer": "No. It only updates ones that exist."
+    },
+    {
+      "type": "Edge case",
+      "question": "Which way do payment methods sync?",
+      "answer": "Stripe to Zenskar only."
+    },
+    {
+      "type": "Edge case",
+      "question": "Credit notes created in Stripe?",
+      "answer": "They are imported but Zenskar does not push its own."
+    },
+    {
+      "type": "Edge case",
+      "question": "Connect one Stripe account twice?",
+      "answer": "Blocked. Each account connects once, and it should not be connected to another platform."
+    },
+    {
+      "type": "Edge case",
+      "question": "Change the entity after connecting?",
+      "answer": "The entity chosen cannot change after saving."
+    },
+    {
+      "type": "Edge case",
+      "question": "Managed Payments?",
+      "answer": "Not compatible with Zenskar's Stripe Connect integration."
+    },
+    {
+      "type": "How it works",
+      "question": "What amount format do payments use?",
+      "answer": "Integers in the smallest currency unit."
+    },
+    {
+      "type": "How it works",
+      "question": "Which webhooks do payments fire?",
+      "answer": "payment.created, updated, succeeded, failed and refunded."
+    }
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "key": "pricing",
+  "name": "Pricing models",
+  "group": "Foundations",
+  "description": "Per unit, tiered, volume, package and more, with a live calculator.",
+  "review": {
+    "status": "draft",
+    "reviewedBy": "",
+    "date": ""
+  },
+  "takeaways": [
+    "One active pricing model per product",
+    "Tiered prices each bracket; volume reprices all units",
+    "Packages always round up",
+    "Matrix pricing uses two dimensions"
+  ],
+  "learn": {
+    "intro": "Every product in Zenskar has exactly one active pricing model. The model decides how a quantity (usually a billable metric) turns into money.",
+    "subs": [
+      {
+        "title": "The models",
+        "cards": [
+          {
+            "title": "Per unit",
+            "body": "Charge for each unit consumed.",
+            "example": "250 licenses × $100 = $25,000."
+          },
+          {
+            "title": "Tiered",
+            "body": "Unit price changes across brackets. Each bracket is priced separately and the bill adds them up.",
+            "example": "Tiers 1–100 at $100, 101–200 at $90, 201+ at $80. 250 units: 100×$100 + 100×$90 + 50×$80 = $23,000."
+          },
+          {
+            "title": "Volume",
+            "body": "One per-unit price applies to the <b>entire</b> quantity, chosen by the bracket it lands in.",
+            "example": "Same tiers. 250 units lands in the top tier, so 250 × $80 = $20,000."
+          },
+          {
+            "title": "Package",
+            "body": "Fixed-size bundles. Partial packages round up.",
+            "example": "Packages of 50 units at $4,500. A customer using 101 units is billed 3 packages = $13,500."
+          },
+          {
+            "title": "With flat fee",
+            "body": "Tiered or volume plus a fixed fee per bracket.",
+            "example": "Volume with flat fee: the top tier has a $250 flat fee. 250 units: $250 + 250 × $80 = $20,250."
+          },
+          {
+            "title": "Step",
+            "body": "A flat fee per tier, stepping up as usage crosses each threshold.",
+            "example": "Illustrative fees of $1,000 / $1,500 / $2,000 for tiers 1 / 2 / 3. Usage of 150 lands in tier 2, so the charge is $1,500."
+          },
+          {
+            "title": "Matrix",
+            "body": "Price depends on two dimensions, such as volume and region.",
+            "example": "Price per order by restaurant type and region: US/Standard $2.00, US/Premium $3.00, EU/Standard $2.50. An EU Standard order bills $2.50."
+          },
+          {
+            "title": "Percent",
+            "body": "A percentage of a transaction value or metered amount.",
+            "example": "2.5% of $40,000 in processed payments = $1,000."
+          }
+        ]
+      }
+    ],
+    "outro": "<b>Metered or not?</b> A metered product reads its quantity from a billable metric for the billing period (example: a metric shows 12,400 API calls this month, and the pricing model prices those 12,400). A non-metered product uses a fixed quantity you enter (example: 25 seats)."
+  },
+  "edgeCases": [
+    "<b>Boundaries.</b> Exactly 100 units is in tier 1; 101 is in tier 2. Try both in the calculator under tiered and volume: volume jumps <i>down</i> at 101 (100×$100 = $10,000 vs 101×$90 = $9,090).",
+    "<b>Zero usage.</b> Per-unit, tiered and volume bill $0. With flat-fee models, check whether the first tier's flat fee still applies when usage is zero.",
+    "<b>Open-ended last tier.</b> The top tier has no upper limit. Make sure the tier above your largest expected customer exists.",
+    "<b>Partial packages.</b> 1 unit and 50 units both bill one package; 51 bills two.",
+    "<b>Flat fee vs usage.</b> In tiered with flat fee, every tier the customer reaches adds its own flat fee, so a customer who barely enters tier 2 still pays tier 2's flat fee."
+  ],
+  "api": {
+    "note": "",
+    "endpointSet": "pricing",
+    "groups": [
+      {
+        "title": "Operations in the reference",
+        "items": [
+          "Products: list, create, get, update, delete product",
+          "Product pricing: get, create, update, delete pricing",
+          "Product bundle pricing: create, get, update"
+        ]
+      }
+    ]
+  },
+  "widget": "pricing-calculator",
+  "quiz": [
+    {
+      "question": "A customer uses 250 licenses. Tiers: 1–100 at $100, 101–200 at $90, 201+ at $80. What does <b>tiered</b> pricing bill?",
+      "options": [
+        "$20,000",
+        "$23,000",
+        "$22,500"
+      ],
+      "answer": 1,
+      "explanation": "Each bracket is priced separately: 100×100 + 100×90 + 50×80 = $23,000."
+    },
+    {
+      "question": "Same usage and tiers, but <b>volume</b> pricing. What is the bill?",
+      "options": [
+        "$20,000",
+        "$23,000",
+        "$25,000"
+      ],
+      "answer": 0,
+      "explanation": "250 lands in the top tier, so all 250 units cost $80: $20,000."
+    },
+    {
+      "question": "A package is 50 units and the customer uses 101. How many packages are billed?",
+      "options": [
+        "2",
+        "2.02",
+        "3"
+      ],
+      "answer": 2,
+      "explanation": "Partial packages always round up to the next full package."
+    },
+    {
+      "question": "\"The bulk-discount rate should apply to every unit once the customer crosses a threshold.\" Which model?",
+      "options": [
+        "Tiered",
+        "Volume",
+        "Step"
+      ],
+      "answer": 1,
+      "explanation": "Volume applies one per-unit price to the entire quantity."
+    },
+    {
+      "question": "Matrix pricing differs from tiered pricing because it depends on…",
+      "options": [
+        "A single quantity",
+        "Two dimensions, such as volume and region",
+        "A flat fee only"
+      ],
+      "answer": 1,
+      "explanation": "Matrix pricing is multi-dimensional; tiered is 1-dimensional."
+    }
+  ],
+  "qa": [
+    {
+      "type": "Difference",
+      "question": "Tiered vs volume: what is the difference?",
+      "answer": "Tiered prices each bracket separately and adds them up. Volume finds the bracket the total quantity lands in and prices every unit at that rate. With $100/$90/$80 brackets and 250 units: tiered $23,000, volume $20,000."
+    },
+    {
+      "type": "Difference",
+      "question": "Volume vs package?",
+      "answer": "Volume changes the per-unit price by quantity. Package sells fixed-size bundles at a fixed price each and rounds partial bundles up."
+    },
+    {
+      "type": "Difference",
+      "question": "Tiered vs tiered with flat fee?",
+      "answer": "The flat-fee variant adds a fixed fee for each bracket the usage reaches, on top of the per-unit rate inside that bracket."
+    },
+    {
+      "type": "Difference",
+      "question": "Volume vs volume with flat fee?",
+      "answer": "Plain volume is quantity × the bracket rate. With a flat fee, the bracket's flat fee is added once."
+    },
+    {
+      "type": "Difference",
+      "question": "Step vs tiered?",
+      "answer": "Per the docs summary, step charges a flat fee per tier as usage crosses each threshold; tiered charges per unit inside each bracket. Confirm exact step behaviour with an SME."
+    },
+    {
+      "type": "Difference",
+      "question": "Matrix vs tiered?",
+      "answer": "Tiered looks at one quantity. Matrix looks up a price using two dimensions, such as region and plan."
+    },
+    {
+      "type": "Difference",
+      "question": "Per unit vs percent?",
+      "answer": "Per unit multiplies a count by a price. Percent applies a rate to an amount, such as 2.5% of payments processed."
+    },
+    {
+      "type": "Difference",
+      "question": "Metered vs non-metered product?",
+      "answer": "A metered product reads its quantity from a billable metric for the billing period. A non-metered product uses a fixed quantity you enter, such as 25 seats."
+    },
+    {
+      "type": "Difference",
+      "question": "Point-in-time vs period-of-time product?",
+      "answer": "Point-in-time products are charged for events as they occur. Period-of-time products are charged for a span, like a subscription. In the V3 docs, point-in-time allows quantity or credits subtypes; period-of-time allows quantity or feature."
+    },
+    {
+      "type": "Difference",
+      "question": "Product vs pricing?",
+      "answer": "The product is what you sell. Pricing (a pricing preset or model) is how it is priced. A product can have pricing presets attached."
+    },
+    {
+      "type": "Use case",
+      "question": "A seat license with a bulk discount for every seat?",
+      "answer": "Volume pricing: once the customer crosses the threshold, all seats get the lower rate."
+    },
+    {
+      "type": "Use case",
+      "question": "API calls with a cheaper rate for higher usage bands?",
+      "answer": "Tiered pricing: early calls keep their price and only calls inside a band get that band's rate."
+    },
+    {
+      "type": "Use case",
+      "question": "Selling credits in blocks of 1,000?",
+      "answer": "Package pricing: each block of 1,000 is one billable package, and partial blocks round up."
+    },
+    {
+      "type": "Use case",
+      "question": "Charging a payment processing fee as a share of volume?",
+      "answer": "Percent pricing."
+    },
+    {
+      "type": "Use case",
+      "question": "Price depends on restaurant tier and region?",
+      "answer": "Matrix pricing. The metric returns a quantity plus dimension columns, and the matrix looks up a price per combination."
+    },
+    {
+      "type": "Use case",
+      "question": "A platform fee plus usage?",
+      "answer": "Either tiered or volume with flat fee, or two products on the contract: a fixed subscription and a metered one."
+    },
+    {
+      "type": "Edge case",
+      "question": "What changes between exactly 100 and 101 units under volume pricing?",
+      "answer": "With brackets 1–100 at $100 and 101–200 at $90: 100 units cost $10,000 but 101 units cost $9,090, so the bill goes down."
+    },
+    {
+      "type": "Edge case",
+      "question": "What does zero usage bill?",
+      "answer": "Per unit, tiered and volume bill $0. For flat-fee models check whether the first bracket's flat fee applies."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can a product's type change after pricing exists?",
+      "answer": "No. The V3 docs block a type change once pricing presets exist (PRODUCT_TYPE_CHANGE_WITH_PRICING)."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I delete or deactivate a product used in contracts?",
+      "answer": "Deleting is blocked while any contract references it. Setting it inactive is blocked if an active contract uses it."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can I edit pricing on an already created product?",
+      "answer": "The V3 docs list editing pricing on an existing product as not yet available. Check your tenant."
+    },
+    {
+      "type": "Edge case",
+      "question": "Can two products share a SKU?",
+      "answer": "No. SKU must be unique in the organization (PRODUCT_SKU_DUPLICATE). Product name uniqueness is currently not enforced."
+    },
+    {
+      "type": "How it works",
+      "question": "How does a metered product get its quantity?",
+      "answer": "A billable metric filters rows, matches the customer, keeps the period and aggregates. The result is the quantity the pricing model prices."
+    },
+    {
+      "type": "How it works",
+      "question": "What are dimensions?",
+      "answer": "Columns returned by a SQL metric alongside the quantity column. Dimensional pricing, such as matrix, uses them."
+    },
+    {
+      "type": "How it works",
+      "question": "What does archived mean for a product?",
+      "answer": "End of life. It is unavailable for new usage and cannot be set when creating a product."
+    }
+  ]
+}
